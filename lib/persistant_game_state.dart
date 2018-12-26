@@ -11,7 +11,7 @@ class PersistantGameState {
       Map data = decoder.convert(json);
 
       coins = data['coins'];
-      _powerupLevels = data['powerUpLevels'];
+      _powerupLevels = data['powerUpLevels'].cast<int>();
       _currentStartingLevel = data['currentStartingLevel'];
       maxStartingLevel = data['maxStartingLevel'];
       laserLevel = data['laserLevel'];
