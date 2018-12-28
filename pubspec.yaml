@@ -5,7 +5,6 @@ dependencies:
   flutter:
     sdk: flutter
   spritewidget:
-    path: ../spritewidget
   path_provider:
 
   # The following adds the Cupertino Icons font to your application.

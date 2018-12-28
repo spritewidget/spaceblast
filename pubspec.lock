@@ -96,10 +96,10 @@ packages:
   spritewidget:
     dependency: "direct main"
     description:
-      path: "../spritewidget"
-      relative: true
-    source: path
-    version: "0.9.17"
+      name: spritewidget
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.18"
   stack_trace:
     dependency: transitive
     description:
@@ -151,4 +151,4 @@ packages:
     version: "2.0.8"
 sdks:
   dart: ">=2.0.0 <3.0.0"
-  flutter: ">=0.1.7 <2.0.0"
+  flutter: ">=1.0.0 <2.0.0"
