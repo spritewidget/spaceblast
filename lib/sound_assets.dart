@@ -1,11 +1,11 @@
 part of game;
 
 class SoundAssets {
-  SoundAssets(this._bundle) {
+  SoundAssets(this.bundle) {
 //    _soundEffectPlayer = new SoundEffectPlayer(20);
   }
 
-  AssetBundle _bundle;
+  AssetBundle bundle;
 //  SoundEffectPlayer _soundEffectPlayer;
 //  Map<String, SoundEffect> _soundEffects = <String, SoundEffect>{};
 

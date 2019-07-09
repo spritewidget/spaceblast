@@ -2,7 +2,7 @@ part of game;
 
 typedef void PointSetterCallback(Offset value);
 
-class ActionCircularMove extends ActionInterval {
+class ActionCircularMove extends MotionInterval {
   ActionCircularMove(this.setter, this.center, this.radius, this.startAngle, this.clockWise, double duration) : super (duration);
 
   final PointSetterCallback setter;
@@ -20,7 +20,7 @@ class ActionCircularMove extends ActionInterval {
   }
 }
 
-class ActionOscillate extends ActionInterval {
+class ActionOscillate extends MotionInterval {
   ActionOscillate(this.setter, this.center, this.radius, double duration) : super(duration);
 
   final PointSetterCallback setter;

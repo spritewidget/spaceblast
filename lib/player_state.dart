@@ -69,15 +69,15 @@ class PlayerState extends Node {
     Sprite sprite = new Sprite(_sheetGame["coin.png"]);
     sprite.scale = 0.7;
 
-    ActionSpline spline = new ActionSpline((Offset a) { sprite.position = a; }, path, 0.5);
+    MotionSpline spline = new MotionSpline((Offset a) { sprite.position = a; }, path, 0.5);
     spline.tension = 0.25;
-    ActionTween rotate = new ActionTween<double>((a) { sprite.rotation = a; }, 0.0, 360.0, 0.5);
-    ActionTween scale = new ActionTween<double>((a) { sprite.scale = a; }, 0.7, 1.2, 0.5);
-    ActionGroup group = new ActionGroup(<Action>[spline, rotate, scale]);
-    sprite.actions.run(new ActionSequence(<Action>[
+    MotionTween rotate = new MotionTween<double>((a) { sprite.rotation = a; }, 0.0, 360.0, 0.5);
+    MotionTween scale = new MotionTween<double>((a) { sprite.scale = a; }, 0.7, 1.2, 0.5);
+    MotionGroup group = new MotionGroup(<Motion>[spline, rotate, scale]);
+    sprite.motions.run(new MotionSequence(<Motion>[
       group,
-      new ActionRemoveNode(sprite),
-      new ActionCallFunction(() {
+      new MotionRemoveNode(sprite),
+      new MotionCallFunction(() {
         _coinDisplay.score += 1;
         flashBackgroundSprite(_spriteBackgroundCoins);
       })
@@ -114,13 +114,13 @@ class PlayerState extends Node {
   bool get speedBoostActive => _speedBoostFrames > 0;
 
   void flashBackgroundSprite(Sprite sprite) {
-    sprite.actions.stopAll();
-    ActionTween flash = new ActionTween<Color>(
+    sprite.motions.stopAll();
+    MotionTween flash = new MotionTween<Color>(
       (a) { sprite.colorOverlay = a; },
       new Color(0x66ccfff0),
       new Color(0x00ccfff0),
       0.3);
-    sprite.actions.run(flash);
+    sprite.motions.run(flash);
   }
 
   void update(double dt) {

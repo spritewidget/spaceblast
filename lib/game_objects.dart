@@ -139,8 +139,8 @@ class Ship extends GameObject {
   }
 
   void setupActions() {
-    ActionTween rotate = new ActionTween<double>((a) { _spriteShield.rotation = a; }, 0.0, 360.0, 1.0);
-    _spriteShield.actions.run(new ActionRepeatForever(rotate));
+    MotionTween rotate = new MotionTween<double>((a) { _spriteShield.rotation = a; }, 0.0, 360.0, 1.0);
+    _spriteShield.motions.run(new MotionRepeatForever(rotate));
   }
 
   void update(double dt) {
@@ -228,10 +228,10 @@ abstract class Asteroid extends Obstacle {
     // Rotate obstacle
     int direction = 1;
     if (randomBool()) direction = -1;
-    ActionTween rotate = new ActionTween<double>(
+    MotionTween rotate = new MotionTween<double>(
       (a) { _sprite.rotation = a; },
       0.0, 360.0 * direction, 5.0 + 5.0 * randomDouble());
-    _sprite.actions.run(new ActionRepeatForever(rotate));
+    _sprite.motions.run(new MotionRepeatForever(rotate));
   }
 
   set damage(double d) {
@@ -351,9 +351,9 @@ class EnemyScout extends Obstacle {
       points.add(position + offset);
     }
 
-    ActionSpline spline = new ActionSpline((Offset a) => position = a, points, 6.0);
+    MotionSpline spline = new MotionSpline((Offset a) => position = a, points, 6.0);
     spline.tension = 0.7;
-    actions.run(new ActionRepeatForever(spline));
+    motions.run(new MotionRepeatForever(spline));
   }
 
   Collectable createPowerUp() {
@@ -393,7 +393,7 @@ class EnemyDestroyer extends Obstacle {
       360.0 * randomDouble(),
       randomBool(),
       3.0);
-    actions.run(new ActionRepeatForever(circle));
+    motions.run(new MotionRepeatForever(circle));
   }
 
   Collectable createPowerUp() {
@@ -497,7 +497,7 @@ class EnemyBoss extends Obstacle {
 
   void setupActions() {
     ActionOscillate oscillate = new ActionOscillate((Offset a) { position = a; }, position, 120.0, 3.0);
-    actions.run(new ActionRepeatForever(oscillate));
+    motions.run(new MotionRepeatForever(oscillate));
   }
 
   void destroy() {
@@ -528,8 +528,8 @@ class EnemyBoss extends Obstacle {
 
   set damage(double d) {
     super.damage = d;
-    _sprite.actions.stopAll();
-    _sprite.actions.run(new ActionTween<Color>(
+    _sprite.motions.stopAll();
+    _sprite.motions.run(new MotionTween<Color>(
       (a) { _sprite.colorOverlay = a; },
       new Color.fromARGB(180, 255, 3, 86),
       new Color(0x00000000),
@@ -561,12 +561,12 @@ class Coin extends Collectable {
 
   void setupActions() {
     // Rotate
-    ActionTween rotate = new ActionTween<double>((a) { _sprite.rotation = a; }, 0.0, 360.0, 1.0);
-    actions.run(new ActionRepeatForever(rotate));
+    MotionTween rotate = new MotionTween<double>((a) { _sprite.rotation = a; }, 0.0, 360.0, 1.0);
+    motions.run(new MotionRepeatForever(rotate));
 
     // Fade in
-    ActionTween fadeIn = new ActionTween<double>((a) { _sprite.opacity = a; }, 0.0, 1.0, 0.6);
-    actions.run(fadeIn);
+    MotionTween fadeIn = new MotionTween<double>((a) { _sprite.opacity = a; }, 0.0, 1.0, 0.6);
+    motions.run(fadeIn);
   }
 
   Sprite _sprite;
@@ -617,12 +617,12 @@ class PowerUp extends Collectable {
   PowerUpType type;
 
   void setupActions() {
-    ActionTween rotate = new ActionTween<double>((a) { _sprite.rotation = a; }, 0.0, 360.0, 1.0);
-    actions.run(new ActionRepeatForever(rotate));
+    MotionTween rotate = new MotionTween<double>((a) { _sprite.rotation = a; }, 0.0, 360.0, 1.0);
+    motions.run(new MotionRepeatForever(rotate));
 
     // Fade in
-    ActionTween fadeIn = new ActionTween<double>((a) { _sprite.opacity = a; }, 0.0, 1.0, 0.6);
-    actions.run(fadeIn);
+    MotionTween fadeIn = new MotionTween<double>((a) { _sprite.opacity = a; }, 0.0, 1.0, 0.6);
+    motions.run(fadeIn);
   }
 
   void collect() {
