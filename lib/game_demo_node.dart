@@ -43,6 +43,7 @@ class GameDemoNode extends NodeWithSize {
 
     // Add heads up display
     _playerState = new PlayerState(_spritesUI, _spritesGame, _gameState);
+    _playerState.position = Offset(0.0, 20.0);
     addChild(_playerState);
 
     _objectFactory = new GameObjectFactory(_spritesGame, _sounds, _level, _playerState);

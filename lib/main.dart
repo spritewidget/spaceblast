@@ -21,40 +21,27 @@ final Color _darkTextColor = new Color(0xff3c3f4a);
 typedef void SelectTabCallback(int index);
 typedef void UpgradePowerUpCallback(PowerUpType type);
 
-AssetBundle _initBundle() {
-  if (rootBundle != null)
-    return rootBundle;
-  return new NetworkAssetBundle(new Uri.directory(Uri.base.origin));
-}
-
-final AssetBundle _bundle = _initBundle();
-
 ImageMap _imageMap;
 SpriteSheet _spriteSheet;
 SpriteSheet _spriteSheetUI;
 
-SoundAssets _sounds = new SoundAssets(_bundle);
+SoundAssets _sounds;
 
 main() async {
-  // Workaround for https://github.com/flutter/flutter/issues/1556
+  // We need to call ensureInitialized if we are loading images before runApp
+  // is called.
+  // TODO: This should be refactored to use a loading screen
   WidgetsFlutterBinding.ensureInitialized();
 
-  print('MAIN');
-
+  // Hide all menu bars
   SystemChrome.setEnabledSystemUIOverlays(<SystemUiOverlay>[]);
 
   // Load game state
   _gameState = new PersistantGameState();
   await _gameState.load();
 
-  print('LOADED GAME STATE');
-
-  _imageMap = new ImageMap(_bundle);
-
-  print('_bundle: $_bundle _imageMap: $_imageMap');
-
-  // Use a list to wait on all loads in parallel just before starting the app.
-//  List<Future> loads = <Future>[];
+  // Load images
+  _imageMap = new ImageMap(rootBundle);
 
   await _imageMap.load(<String>[
     'assets/nebula.png',
@@ -66,8 +53,8 @@ main() async {
     'assets/ui_popup.png',
   ]);
 
-  print('ADDED IMAGES');
-
+  // TODO: Fix sounds
+  _sounds = SoundAssets(rootBundle);
 //  loads.addAll([
 //    _sounds.load('explosion_0'),
 //    _sounds.load('explosion_1'),
@@ -87,97 +74,26 @@ main() async {
 
 //  await Future.wait(loads);
 
-  print('LOADED IMAGES');
-
   // Load sprite sheets
-  String json = await _bundle.loadString('assets/sprites.json');
+  String json = await rootBundle.loadString('assets/sprites.json');
   _spriteSheet = new SpriteSheet(_imageMap['assets/sprites.png'], json);
 
-  json = await _bundle.loadString('assets/game_ui.json');
+  json = await rootBundle.loadString('assets/game_ui.json');
   _spriteSheetUI = new SpriteSheet(_imageMap['assets/game_ui.png'], json);
 
   assert(_spriteSheet.image != null);
 
-//  SoundTrackPlayer stPlayer = SoundTrackPlayer.sharedInstance();
-//  SoundTrack music = await stPlayer.load(_bundle.load('assets/music_game.mp3'));
-//  stPlayer.play(music, loop: true);
-
-  print('ALL LOADED');
-
+  // All game assets are loaded - we are good to go!
   runApp(new GameDemo());
 }
-
-//class GameRoute extends PageRoute {
-//  GameRoute(this.builder);
-//  final WidgetBuilder builder;
-//  Duration get transitionDuration => const Duration(milliseconds: 1000);
-//  Color get barrierColor => null;
-//  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> forwardAnimation) {
-//    return builder(context);
-//  }
-//  Widget buildTransitions(BuildContext context, Animation<double> animation, Animation<double> forwardAnimation, Widget child) {
-//    CurvedAnimation curve = new CurvedAnimation(
-//      parent: animation,
-//      curve: new Interval(0.5, 1.0, curve: Curves.ease)
-//    );
-//    CurvedAnimation forwardCurve = new CurvedAnimation(
-//      parent: forwardAnimation,
-//      curve: new Interval(0.0, 0.5, curve: Curves.ease)
-//    );
-//    return new FadeTransition(
-//      opacity: new Tween<double>(
-//        begin: 0.0,
-//        end: 1.0
-//      ).animate(curve),
-//      child: new FadeTransition(
-//        opacity: new Tween<double>(
-//          begin: 1.0,
-//          end: 0.0
-//        ).animate(forwardCurve),
-//        child: child
-//      )
-//    );
-//  }
-//
-//  String get barrierLabel => '';
-//
-//  // TODO: Is this correct??
-//  bool get maintainState => false;
-//}
 
 class GameDemo extends StatefulWidget {
   GameDemoState createState() => new GameDemoState();
 }
 
-class GameDemoState extends State<GameDemo>/* with WidgetsBindingObserver */{
-
-  void initState() {
-    super.initState();
-//    WidgetsBinding.instance.addObserver(this);
-  }
-
-  void dispose() {
-//    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  void didChangeAppLifecycleState(ui.AppLifecycleState state) {
-    if (state == ui.AppLifecycleState.paused) {
-//      SoundTrackPlayer.sharedInstance().pauseAll();
-    } else if (state == ui.AppLifecycleState.resumed) {
-//      SoundTrackPlayer.sharedInstance().resumeAll();
-    }
-  }
+class GameDemoState extends State<GameDemo> {
 
   GlobalKey<NavigatorState> _navigatorKey = new GlobalKey<NavigatorState>();
-
-  Future<bool> didPopRoute() async {
-    bool result = true;
-//    Navigator.openTransaction((NavigatorTransaction transaction) {
-//      result = transaction.pop();
-//    });
-    return result;
-  }
 
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -307,46 +223,59 @@ class MainSceneState extends State<MainScene> {
   }
 
   Widget build(BuildContext context) {
-    return new CoordinateSystem(
-      systemSize: new Size(320.0, 320.0),
-      child:new DefaultTextStyle(
-        style: new TextStyle(fontFamily: "Orbitron", fontSize:20.0),
-        child: new Stack(
-          children: <Widget>[
-            new MainSceneBackground(),
-            new Column(
-              children: <Widget>[
-                new SizedBox(
-                  width: 320.0,
-                  height: 98.0,
-                  child: new TopBar(
-                    gameState: widget.gameState
-                  )
-                ),
-                new Flexible(
-                  child: new CenterArea(
-                    onUpgradeLaser: widget.onUpgradeLaser,
-                    onUpgradePowerUp: widget.onUpgradePowerUp,
-                    gameState: widget.gameState
-                  )
-                ),
-                new SizedBox(
-                  width: 320.0,
-                  height: 93.0,
-                  child: new BottomBar(
-                    onPlay: () {
-                      Navigator.pushNamed(context, '/game');
-                    },
-                    onStartLevelUp: widget.onStartLevelUp,
-                    onStartLevelDown: widget.onStartLevelDown,
-                    gameState: widget.gameState
-                  )
-                )
-              ]
-            )
-          ]
-        )
-      )
+    var notchOffset = MediaQuery.of(context).padding.top;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        Container(
+          height: notchOffset,
+        ),
+        Expanded(
+          child: CoordinateSystem(
+            systemSize: Size(320.0, 320.0),
+            child: DefaultTextStyle(
+              style: TextStyle(fontFamily: "Orbitron", fontSize:20.0),
+              child: Stack(
+                children: <Widget>[
+                  MainSceneBackground(),
+                  Column(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 320.0,
+                        height: 98.0,
+                        child: TopBar(
+                          gameState: widget.gameState,
+                        ),
+                      ),
+                      Expanded(
+                        child: CenterArea(
+                          onUpgradeLaser: widget.onUpgradeLaser,
+                          onUpgradePowerUp: widget.onUpgradePowerUp,
+                          gameState: widget.gameState,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 320.0,
+                        height: 93.0,
+                        child: BottomBar(
+                          onPlay: () {
+                            Navigator.pushNamed(context, '/game');
+                          },
+                          onStartLevelUp: widget.onStartLevelUp,
+                          onStartLevelDown: widget.onStartLevelDown,
+                          gameState: widget.gameState,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -428,7 +357,6 @@ class TopBar extends StatelessWidget {
 }
 
 class CenterArea extends StatelessWidget {
-
   CenterArea({
     this.selection,
     this.onUpgradeLaser,
@@ -535,7 +463,6 @@ class CenterArea extends StatelessWidget {
 }
 
 class BottomBar extends StatelessWidget {
-
   BottomBar({this.onPlay, this.gameState, this.onStartLevelUp, this.onStartLevelDown});
 
   final VoidCallback onPlay;

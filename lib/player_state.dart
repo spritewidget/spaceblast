@@ -9,8 +9,6 @@ class PlayerState extends Node {
     _spriteBackgroundScore.position = new Offset(240.0, 10.0);
     addChild(_spriteBackgroundScore);
 
-    print('size: ${_spriteBackgroundScore.size}');
-
     _scoreDisplay = new ScoreDisplay(_sheetUI);
     _scoreDisplay.position = new Offset(349.0, 49.0);
     _spriteBackgroundScore.addChild(_scoreDisplay);
