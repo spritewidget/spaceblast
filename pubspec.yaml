@@ -1,5 +1,6 @@
 name: spaceblast
 description: A new Flutter project.
+version: 0.9.0
 
 dependencies:
   flutter:
