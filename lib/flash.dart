@@ -2,10 +2,18 @@ part of game;
 
 class Flash extends NodeWithSize {
   Flash(Size size, this.duration) : super(size) {
-    MotionTween fade = MotionTween<double>((a) {
-      _opacity = a;
-    }, 1.0, 0.0, duration);
-    MotionSequence seq = MotionSequence(<Motion>[fade, MotionRemoveNode(this)]);
+    MotionTween fade = MotionTween<double>(
+      setter: (a) => _opacity = a,
+      start: 1.0,
+      end: 0.0,
+      duration: duration,
+    );
+    MotionSequence seq = MotionSequence(
+      motions: <Motion>[
+        fade,
+        MotionRemoveNode(node: this),
+      ],
+    );
     motions.run(seq);
   }
 

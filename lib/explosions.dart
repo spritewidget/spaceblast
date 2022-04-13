@@ -31,15 +31,18 @@ class ExplosionBig extends Explosion {
 
     ParticleSystem particlesFire = ParticleSystem(
       sheet["fire_particle.png"]!,
-      colorSequence: ColorSequence(<Color>[
-        const Color(0xffffff33),
-        const Color(0xffff3333),
-        const Color(0x00ff3333)
-      ], <double>[
-        0.0,
-        0.5,
-        1.0,
-      ]),
+      colorSequence: ColorSequence(
+        colors: [
+          const Color(0xffffff33),
+          const Color(0xffff3333),
+          const Color(0x00ff3333)
+        ],
+        stops: [
+          0.0,
+          0.5,
+          1.0,
+        ],
+      ),
       numParticlesToEmit: 25,
       emissionRate: 1000.0,
       startSize: 0.5,
@@ -61,23 +64,19 @@ class ExplosionBig extends Explosion {
     addChild(spriteRing);
 
     Motion scale = MotionTween<double>(
-      (a) {
-        spriteRing.scale = a;
-      },
-      0.2,
-      1.0,
-      0.75,
+      setter: (a) => spriteRing.scale = a,
+      start: 0.2,
+      end: 1.0,
+      duration: 0.75,
     );
     Motion scaleAndRemove = MotionSequence(
-      <Motion>[scale, MotionRemoveNode(spriteRing)],
+      motions: <Motion>[scale, MotionRemoveNode(node: spriteRing)],
     );
     Motion fade = MotionTween<double>(
-      (a) {
-        spriteRing.opacity = a;
-      },
-      1.0,
-      0.0,
-      0.75,
+      setter: (a) => spriteRing.opacity = a,
+      start: 1.0,
+      end: 0.0,
+      duration: 0.75,
     );
     motions.run(scaleAndRemove);
     motions.run(fade);
@@ -93,18 +92,31 @@ class ExplosionBig extends Explosion {
 
       double multiplier = randomDouble() * 0.3 + 1.0;
 
-      Motion scale = MotionTween<double>((a) {
-        spriteFlare.scaleY = a;
-      }, 0.3 * multiplier, 0.8, 0.75 * multiplier);
-      Motion scaleAndRemove =
-          MotionSequence(<Motion>[scale, MotionRemoveNode(spriteFlare)]);
-      Motion fadeIn = MotionTween<double>((a) {
-        spriteFlare.opacity = a;
-      }, 0.0, 1.0, 0.25 * multiplier);
-      Motion fadeOut = MotionTween<double>((a) {
-        spriteFlare.opacity = a;
-      }, 1.0, 0.0, 0.5 * multiplier);
-      Motion fadeInOut = MotionSequence(<Motion>[fadeIn, fadeOut]);
+      Motion scale = MotionTween<double>(
+        setter: (a) => spriteFlare.scaleY = a,
+        start: 0.3 * multiplier,
+        end: 0.8,
+        duration: 0.75 * multiplier,
+      );
+      Motion scaleAndRemove = MotionSequence(
+        motions: [
+          scale,
+          MotionRemoveNode(node: spriteFlare),
+        ],
+      );
+      Motion fadeIn = MotionTween<double>(
+        setter: (a) => spriteFlare.opacity = a,
+        start: 0.0,
+        end: 1.0,
+        duration: 0.25 * multiplier,
+      );
+      Motion fadeOut = MotionTween<double>(
+        setter: (a) => spriteFlare.opacity = a,
+        start: 1.0,
+        end: 0.0,
+        duration: 0.5 * multiplier,
+      );
+      Motion fadeInOut = MotionSequence(motions: [fadeIn, fadeOut]);
       motions.run(scaleAndRemove);
       motions.run(fadeInOut);
     }
@@ -127,19 +139,29 @@ class ExplosionMini extends Explosion {
         rotationEnd = -rotationEnd;
       }
 
-      MotionTween rotate = MotionTween<double>((a) {
-        star.rotation = a;
-      }, rotationStart, rotationEnd, 0.2);
+      MotionTween rotate = MotionTween<double>(
+        setter: (a) => star.rotation = a,
+        start: rotationStart,
+        end: rotationEnd,
+        duration: 0.2,
+      );
       motions.run(rotate);
 
-      MotionTween fade = MotionTween<double>((a) {
-        star.opacity = a;
-      }, 1.0, 0.0, 0.2);
+      MotionTween fade = MotionTween<double>(
+        setter: (a) => star.opacity = a,
+        start: 1.0,
+        end: 0.0,
+        duration: 0.2,
+      );
       motions.run(fade);
     }
 
-    MotionSequence seq =
-        MotionSequence(<Motion>[MotionDelay(0.2), MotionRemoveNode(this)]);
+    MotionSequence seq = MotionSequence(
+      motions: [
+        MotionDelay(delay: 0.2),
+        MotionRemoveNode(node: this),
+      ],
+    );
     motions.run(seq);
   }
 }

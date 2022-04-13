@@ -136,10 +136,13 @@ class Ship extends GameObject {
 
   @override
   void setupActions() {
-    MotionTween rotate = MotionTween<double>((a) {
-      _spriteShield.rotation = a;
-    }, 0.0, 360.0, 1.0);
-    _spriteShield.motions.run(MotionRepeatForever(rotate));
+    MotionTween rotate = MotionTween<double>(
+      setter: (a) => _spriteShield.rotation = a,
+      start: 0.0,
+      end: 360.0,
+      duration: 1.0,
+    );
+    _spriteShield.motions.run(MotionRepeatForever(motion: rotate));
   }
 
   @override
@@ -231,10 +234,13 @@ abstract class Asteroid extends Obstacle {
     // Rotate obstacle
     int direction = 1;
     if (randomBool()) direction = -1;
-    MotionTween rotate = MotionTween<double>((a) {
-      _sprite.rotation = a;
-    }, 0.0, 360.0 * direction, 5.0 + 5.0 * randomDouble());
-    _sprite.motions.run(MotionRepeatForever(rotate));
+    MotionTween rotate = MotionTween<double>(
+      setter: (a) => _sprite.rotation = a,
+      start: 0.0,
+      end: 360.0 * direction,
+      duration: 5.0 + 5.0 * randomDouble(),
+    );
+    _sprite.motions.run(MotionRepeatForever(motion: rotate));
   }
 
   @override
@@ -365,7 +371,7 @@ class EnemyScout extends Obstacle {
 
     MotionSpline spline = MotionSpline((Offset a) => position = a, points, 6.0);
     spline.tension = 0.7;
-    motions.run(MotionRepeatForever(spline));
+    motions.run(MotionRepeatForever(motion: spline));
   }
 
   @override
@@ -400,7 +406,7 @@ class EnemyDestroyer extends Obstacle {
     addChild(_sprite);
 
     constraints = <Constraint>[
-      ConstraintRotationToNode(f.level.ship, dampening: 0.05)
+      ConstraintRotationToNode(targetNode: f.level.ship, dampening: 0.05)
     ];
   }
 
@@ -411,7 +417,7 @@ class EnemyDestroyer extends Obstacle {
     ActionCircularMove circle = ActionCircularMove((Offset a) {
       position = a;
     }, position, 40.0, 360.0 * randomDouble(), randomBool(), 3.0);
-    motions.run(MotionRepeatForever(circle));
+    motions.run(MotionRepeatForever(motion: circle));
   }
 
   @override
@@ -477,15 +483,18 @@ class EnemyBoss extends Obstacle {
     maxDamage = 40.0 + 20.0 * level;
 
     constraints = <Constraint>[
-      ConstraintRotationToNode(f.level.ship, dampening: 0.05)
+      ConstraintRotationToNode(targetNode: f.level.ship, dampening: 0.05)
     ];
 
     _powerBar = PowerBar(const Size(60.0, 10.0));
     _powerBar.pivot = const Offset(0.5, 0.5);
     f.level.addChild(_powerBar);
     _powerBar.constraints = <Constraint>[
-      ConstraintPositionToNode(this,
-          dampening: 0.5, offset: const Offset(0.0, -70.0))
+      ConstraintPositionToNode(
+        targetNode: this,
+        dampening: 0.5,
+        offset: const Offset(0.0, -70.0),
+      )
     ];
   }
 
@@ -525,7 +534,7 @@ class EnemyBoss extends Obstacle {
     ActionOscillate oscillate = ActionOscillate((Offset a) {
       position = a;
     }, position, 120.0, 3.0);
-    motions.run(MotionRepeatForever(oscillate));
+    motions.run(MotionRepeatForever(motion: oscillate));
   }
 
   @override
@@ -559,9 +568,14 @@ class EnemyBoss extends Obstacle {
   set damage(double d) {
     super.damage = d;
     _sprite.motions.stopAll();
-    _sprite.motions.run(MotionTween<Color>((a) {
-      _sprite.colorOverlay = a;
-    }, const Color.fromARGB(180, 255, 3, 86), const Color(0x00000000), 0.3));
+    _sprite.motions.run(
+      MotionTween<Color>(
+        setter: (a) => _sprite.colorOverlay = a,
+        start: const Color.fromARGB(180, 255, 3, 86),
+        end: const Color(0x00000000),
+        duration: 0.3,
+      ),
+    );
 
     _powerBar.power = (1.0 - (damage / maxDamage)).clamp(0.0, 1.0);
   }
@@ -589,15 +603,21 @@ class Coin extends Collectable {
   @override
   void setupActions() {
     // Rotate
-    MotionTween rotate = MotionTween<double>((a) {
-      _sprite.rotation = a;
-    }, 0.0, 360.0, 1.0);
-    motions.run(MotionRepeatForever(rotate));
+    MotionTween rotate = MotionTween<double>(
+      setter: (a) => _sprite.rotation = a,
+      start: 0.0,
+      end: 360.0,
+      duration: 1.0,
+    );
+    motions.run(MotionRepeatForever(motion: rotate));
 
     // Fade in
-    MotionTween fadeIn = MotionTween<double>((a) {
-      _sprite.opacity = a;
-    }, 0.0, 1.0, 0.6);
+    MotionTween fadeIn = MotionTween<double>(
+      setter: (a) => _sprite.opacity = a,
+      start: 0.0,
+      end: 1.0,
+      duration: 0.6,
+    );
     motions.run(fadeIn);
   }
 
@@ -651,15 +671,21 @@ class PowerUp extends Collectable {
 
   @override
   void setupActions() {
-    MotionTween rotate = MotionTween<double>((a) {
-      _sprite.rotation = a;
-    }, 0.0, 360.0, 1.0);
-    motions.run(MotionRepeatForever(rotate));
+    MotionTween rotate = MotionTween<double>(
+      setter: (a) => _sprite.rotation = a,
+      start: 0.0,
+      end: 360.0,
+      duration: 1.0,
+    );
+    motions.run(MotionRepeatForever(motion: rotate));
 
     // Fade in
-    MotionTween fadeIn = MotionTween<double>((a) {
-      _sprite.opacity = a;
-    }, 0.0, 1.0, 0.6);
+    MotionTween fadeIn = MotionTween<double>(
+      setter: (a) => _sprite.opacity = a,
+      start: 0.0,
+      end: 1.0,
+      duration: 0.6,
+    );
     motions.run(fadeIn);
   }
 

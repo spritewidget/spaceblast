@@ -35,7 +35,7 @@ main() async {
   await _gameState.load();
 
   // Load images
-  _imageMap = ImageMap(rootBundle);
+  _imageMap = ImageMap();
 
   await _imageMap.load(<String>[
     'assets/nebula.png',

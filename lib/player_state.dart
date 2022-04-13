@@ -71,21 +71,33 @@ class PlayerState extends Node {
       sprite.position = a;
     }, path, 0.5);
     spline.tension = 0.25;
-    MotionTween rotate = MotionTween<double>((a) {
-      sprite.rotation = a;
-    }, 0.0, 360.0, 0.5);
-    MotionTween scale = MotionTween<double>((a) {
-      sprite.scale = a;
-    }, 0.7, 1.2, 0.5);
-    MotionGroup group = MotionGroup(<Motion>[spline, rotate, scale]);
-    sprite.motions.run(MotionSequence(<Motion>[
-      group,
-      MotionRemoveNode(sprite),
-      MotionCallFunction(() {
-        _coinDisplay.score += 1;
-        flashBackgroundSprite(_spriteBackgroundCoins);
-      })
-    ]));
+    MotionTween rotate = MotionTween<double>(
+      setter: (a) => sprite.rotation = a,
+      start: 0.0,
+      end: 360.0,
+      duration: 0.5,
+    );
+    MotionTween scale = MotionTween<double>(
+      setter: (a) => sprite.scale = a,
+      start: 0.7,
+      end: 1.2,
+      duration: 0.5,
+    );
+    MotionGroup group = MotionGroup(motions: [spline, rotate, scale]);
+    sprite.motions.run(
+      MotionSequence(
+        motions: [
+          group,
+          MotionRemoveNode(node: sprite),
+          MotionCallFunction(
+            callback: () {
+              _coinDisplay.score += 1;
+              flashBackgroundSprite(_spriteBackgroundCoins);
+            },
+          ),
+        ],
+      ),
+    );
 
     addChild(sprite);
   }
@@ -120,9 +132,12 @@ class PlayerState extends Node {
 
   void flashBackgroundSprite(Sprite sprite) {
     sprite.motions.stopAll();
-    MotionTween flash = MotionTween<Color>((a) {
-      sprite.colorOverlay = a;
-    }, const Color(0x66ccfff0), const Color(0x00ccfff0), 0.3);
+    MotionTween flash = MotionTween<Color>(
+      setter: (a) => sprite.colorOverlay = a,
+      start: const Color(0x66ccfff0),
+      end: const Color(0x00ccfff0),
+      duration: 0.3,
+    );
     sprite.motions.run(flash);
   }
 
