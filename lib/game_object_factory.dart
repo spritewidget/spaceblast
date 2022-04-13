@@ -16,15 +16,16 @@ class GameObjectFactory {
 
     for (int i = 0; i < numAsteroids; i++) {
       GameObject obj;
-      if (i == 0)
-        obj = new AsteroidPowerUp(this);
-      else if (randomDouble() < distribution)
-        obj = new AsteroidBig(this);
-      else
-        obj = new AsteroidSmall(this);
+      if (i == 0) {
+        obj = AsteroidPowerUp(this);
+      } else if (randomDouble() < distribution) {
+        obj = AsteroidBig(this);
+      } else {
+        obj = AsteroidSmall(this);
+      }
 
-      Offset pos = new Offset(randomSignedDouble() * 160.0,
-                            yPos + _chunkSpacing * randomDouble());
+      Offset pos = Offset(
+          randomSignedDouble() * 160.0, yPos + _chunkSpacing * randomDouble());
       addGameObject(obj, pos);
     }
   }
@@ -34,21 +35,34 @@ class GameObjectFactory {
     late List<int> types;
     int swarmLevel = level % _maxLevel;
 
-    if (swarmLevel == 0) types = [0, 0, 0];
-    else if (swarmLevel == 1) types = [0, 1, 0];
-    else if (swarmLevel == 2) types = [1, 0, 1];
-    else if (swarmLevel == 3) types = [1, 1, 1];
-    else if (swarmLevel == 4) types = [0, 1, 2];
-    else if (swarmLevel == 5) types = [1, 2, 1];
-    else if (swarmLevel == 6) types = [2, 1, 2];
-    else if (swarmLevel == 7) types = [2, 1, 2];
-    else if (swarmLevel == 8) types = [2, 2, 2];
+    if (swarmLevel == 0) {
+      types = [0, 0, 0];
+    } else if (swarmLevel == 1) {
+      types = [0, 1, 0];
+    } else if (swarmLevel == 2) {
+      types = [1, 0, 1];
+    } else if (swarmLevel == 3) {
+      types = [1, 1, 1];
+    } else if (swarmLevel == 4) {
+      types = [0, 1, 2];
+    } else if (swarmLevel == 5) {
+      types = [1, 2, 1];
+    } else if (swarmLevel == 6) {
+      types = [2, 1, 2];
+    } else if (swarmLevel == 7) {
+      types = [2, 1, 2];
+    } else if (swarmLevel == 8) {
+      types = [2, 2, 2];
+    }
 
     for (int i = 0; i < numEnemies; i++) {
       int type = types[i % 3];
       double spacing = math.max(_chunkSpacing / (numEnemies + 1.0), 80.0);
-      double y = yPos + _chunkSpacing / 2.0 - (numEnemies - 1) * spacing / 2.0 + i * spacing;
-      addGameObject(new EnemyScout(this, type), new Offset(0.0, y));
+      double y = yPos +
+          _chunkSpacing / 2.0 -
+          (numEnemies - 1) * spacing / 2.0 +
+          i * spacing;
+      addGameObject(EnemyScout(this, type), Offset(0.0, y));
     }
   }
 
@@ -57,19 +71,32 @@ class GameObjectFactory {
     late List<int> types;
     int swarmLevel = level % _maxLevel;
 
-    if (swarmLevel == 0) types = [0, 0, 0];
-    else if (swarmLevel == 1) types = [0, 1, 0];
-    else if (swarmLevel == 2) types = [1, 0, 1];
-    else if (swarmLevel == 3) types = [1, 1, 1];
-    else if (swarmLevel == 4) types = [0, 1, 2];
-    else if (swarmLevel == 5) types = [1, 2, 1];
-    else if (swarmLevel == 6) types = [2, 1, 2];
-    else if (swarmLevel == 7) types = [2, 1, 2];
-    else if (swarmLevel == 8) types = [2, 2, 2];
+    if (swarmLevel == 0) {
+      types = [0, 0, 0];
+    } else if (swarmLevel == 1) {
+      types = [0, 1, 0];
+    } else if (swarmLevel == 2) {
+      types = [1, 0, 1];
+    } else if (swarmLevel == 3) {
+      types = [1, 1, 1];
+    } else if (swarmLevel == 4) {
+      types = [0, 1, 2];
+    } else if (swarmLevel == 5) {
+      types = [1, 2, 1];
+    } else if (swarmLevel == 6) {
+      types = [2, 1, 2];
+    } else if (swarmLevel == 7) {
+      types = [2, 1, 2];
+    } else if (swarmLevel == 8) {
+      types = [2, 2, 2];
+    }
 
     for (int i = 0; i < numEnemies; i++) {
       int type = types[i % 3];
-      addGameObject(new EnemyDestroyer(this, type), new Offset(randomSignedDouble() * 120.0 , yPos + _chunkSpacing * randomDouble()));
+      addGameObject(
+          EnemyDestroyer(this, type),
+          Offset(randomSignedDouble() * 120.0,
+              yPos + _chunkSpacing * randomDouble()));
     }
   }
 
@@ -82,8 +109,8 @@ class GameObjectFactory {
 
   void addBossFight(int level, double yPos) {
     // Add boss
-    EnemyBoss boss = new EnemyBoss(this, level);
-    Offset pos = new Offset(0.0, yPos + _chunkSpacing / 2.0);
+    EnemyBoss boss = EnemyBoss(this, level);
+    Offset pos = Offset(0.0, yPos + _chunkSpacing / 2.0);
 
     addGameObject(boss, pos);
 
@@ -93,29 +120,33 @@ class GameObjectFactory {
 
     // Add boss's helpers
     if (level >= 1) {
-      EnemyDestroyer destroyer0 = new EnemyDestroyer(this, destroyerLevel);
-      addGameObject(destroyer0, new Offset(-80.0, yPos + _chunkSpacing / 2.0 + 70.0));
+      EnemyDestroyer destroyer0 = EnemyDestroyer(this, destroyerLevel);
+      addGameObject(
+          destroyer0, Offset(-80.0, yPos + _chunkSpacing / 2.0 + 70.0));
 
-      EnemyDestroyer destroyer1 = new EnemyDestroyer(this, destroyerLevel);
-      addGameObject(destroyer1, new Offset(80.0, yPos + _chunkSpacing / 2.0 + 70.0));
+      EnemyDestroyer destroyer1 = EnemyDestroyer(this, destroyerLevel);
+      addGameObject(
+          destroyer1, Offset(80.0, yPos + _chunkSpacing / 2.0 + 70.0));
 
       if (level >= 2) {
-        EnemyDestroyer destroyer0 = new EnemyDestroyer(this, destroyerLevel);
-        addGameObject(destroyer0, new Offset(-80.0, yPos + _chunkSpacing / 2.0 - 70.0));
+        EnemyDestroyer destroyer0 = EnemyDestroyer(this, destroyerLevel);
+        addGameObject(
+            destroyer0, Offset(-80.0, yPos + _chunkSpacing / 2.0 - 70.0));
 
-        EnemyDestroyer destroyer1 = new EnemyDestroyer(this, destroyerLevel);
-        addGameObject(destroyer1, new Offset(80.0, yPos + _chunkSpacing / 2.0 - 70.0));
+        EnemyDestroyer destroyer1 = EnemyDestroyer(this, destroyerLevel);
+        addGameObject(
+            destroyer1, Offset(80.0, yPos + _chunkSpacing / 2.0 - 70.0));
       }
     }
   }
 }
 
-final List<Color> laserColors = <Color>[
-  new Color(0xff95f4fb),
-  new Color(0xff5bff35),
-  new Color(0xffff886c),
-  new Color(0xffffd012),
-  new Color(0xfffd7fff)
+const List<Color> laserColors = [
+  Color(0xff95f4fb),
+  Color(0xff5bff35),
+  Color(0xffff886c),
+  Color(0xffffd012),
+  Color(0xfffd7fff),
 ];
 
 void addLaserSprites(Node node, int level, double r, SpriteSheet sheet) {
@@ -125,7 +156,7 @@ void addLaserSprites(Node node, int level, double r, SpriteSheet sheet) {
   // Add sprites
   List<Sprite> sprites = <Sprite>[];
   for (int i = 0; i < numLasers; i++) {
-    Sprite sprite = new Sprite(sheet["explosion_particle.png"]!);
+    Sprite sprite = Sprite(sheet["explosion_particle.png"]!);
     sprite.scale = 0.5;
     sprite.colorOverlay = laserColor;
     sprite.transferMode = ui.BlendMode.plus;
@@ -135,11 +166,11 @@ void addLaserSprites(Node node, int level, double r, SpriteSheet sheet) {
 
   // Position the individual sprites
   if (numLasers == 2) {
-    sprites[0].position = new Offset(-3.0, 0.0);
-    sprites[1].position = new Offset(3.0, 0.0);
+    sprites[0].position = const Offset(-3.0, 0.0);
+    sprites[1].position = const Offset(3.0, 0.0);
   } else if (numLasers == 3) {
-    sprites[0].position = new Offset(-4.0, 0.0);
-    sprites[1].position = new Offset(4.0, 0.0);
-    sprites[2].position = new Offset(0.0, -2.0);
+    sprites[0].position = const Offset(-4.0, 0.0);
+    sprites[1].position = const Offset(4.0, 0.0);
+    sprites[2].position = const Offset(0.0, -2.0);
   }
 }

@@ -3,25 +3,25 @@ part of game;
 class PlayerState extends Node {
   PlayerState(this._sheetUI, this._sheetGame, this._gameState) {
     // Score display
-    _spriteBackgroundScore = new Sprite(_sheetUI["scoreboard.png"]!);
-    _spriteBackgroundScore.pivot = new Offset(1.0, 0.0);
+    _spriteBackgroundScore = Sprite(_sheetUI["scoreboard.png"]!);
+    _spriteBackgroundScore.pivot = const Offset(1.0, 0.0);
     _spriteBackgroundScore.scale = 0.35;
-    _spriteBackgroundScore.position = new Offset(240.0, 10.0);
+    _spriteBackgroundScore.position = const Offset(240.0, 10.0);
     addChild(_spriteBackgroundScore);
 
-    _scoreDisplay = new ScoreDisplay(_sheetUI);
-    _scoreDisplay.position = new Offset(349.0, 49.0);
+    _scoreDisplay = ScoreDisplay(_sheetUI);
+    _scoreDisplay.position = const Offset(349.0, 49.0);
     _spriteBackgroundScore.addChild(_scoreDisplay);
 
     // Coin display
-    _spriteBackgroundCoins = new Sprite(_sheetUI["coinboard.png"]!);
-    _spriteBackgroundCoins.pivot = new Offset(1.0, 0.0);
+    _spriteBackgroundCoins = Sprite(_sheetUI["coinboard.png"]!);
+    _spriteBackgroundCoins.pivot = const Offset(1.0, 0.0);
     _spriteBackgroundCoins.scale = 0.35;
-    _spriteBackgroundCoins.position = new Offset(105.0, 10.0);
+    _spriteBackgroundCoins.position = const Offset(105.0, 10.0);
     addChild(_spriteBackgroundCoins);
 
-    _coinDisplay = new ScoreDisplay(_sheetUI);
-    _coinDisplay.position = new Offset(252.0, 49.0);
+    _coinDisplay = ScoreDisplay(_sheetUI);
+    _coinDisplay.position = const Offset(252.0, 49.0);
     _spriteBackgroundCoins.addChild(_coinDisplay);
 
     laserLevel = _gameState.laserLevel;
@@ -58,24 +58,30 @@ class PlayerState extends Node {
   void addCoin(Coin c) {
     // Animate coin to the top of the screen
     Offset startPos = convertPointFromNode(Offset.zero, c);
-    Offset finalPos = new Offset(30.0, 30.0);
-    Offset middlePos = new Offset((startPos.dx + finalPos.dx) / 2.0 + 50.0,
-      (startPos.dy + finalPos.dy) / 2.0);
+    Offset finalPos = const Offset(30.0, 30.0);
+    Offset middlePos = Offset((startPos.dx + finalPos.dx) / 2.0 + 50.0,
+        (startPos.dy + finalPos.dy) / 2.0);
 
     List<Offset> path = <Offset>[startPos, middlePos, finalPos];
 
-    Sprite sprite = new Sprite(_sheetGame["coin.png"]!);
+    Sprite sprite = Sprite(_sheetGame["coin.png"]!);
     sprite.scale = 0.7;
 
-    MotionSpline spline = new MotionSpline((Offset a) { sprite.position = a; }, path, 0.5);
+    MotionSpline spline = MotionSpline((Offset a) {
+      sprite.position = a;
+    }, path, 0.5);
     spline.tension = 0.25;
-    MotionTween rotate = new MotionTween<double>((a) { sprite.rotation = a; }, 0.0, 360.0, 0.5);
-    MotionTween scale = new MotionTween<double>((a) { sprite.scale = a; }, 0.7, 1.2, 0.5);
-    MotionGroup group = new MotionGroup(<Motion>[spline, rotate, scale]);
-    sprite.motions.run(new MotionSequence(<Motion>[
+    MotionTween rotate = MotionTween<double>((a) {
+      sprite.rotation = a;
+    }, 0.0, 360.0, 0.5);
+    MotionTween scale = MotionTween<double>((a) {
+      sprite.scale = a;
+    }, 0.7, 1.2, 0.5);
+    MotionGroup group = MotionGroup(<Motion>[spline, rotate, scale]);
+    sprite.motions.run(MotionSequence(<Motion>[
       group,
-      new MotionRemoveNode(sprite),
-      new MotionCallFunction(() {
+      MotionRemoveNode(sprite),
+      MotionCallFunction(() {
         _coinDisplay.score += 1;
         flashBackgroundSprite(_spriteBackgroundCoins);
       })
@@ -100,7 +106,8 @@ class PlayerState extends Node {
   int _shieldFrames = 0;
   bool get shieldActive => _shieldFrames > 0 || _speedBoostFrames > 0;
   bool get shieldDeactivating =>
-    math.max(_shieldFrames, _speedBoostFrames) > 0 && math.max(_shieldFrames, _speedBoostFrames) < 60;
+      math.max(_shieldFrames, _speedBoostFrames) > 0 &&
+      math.max(_shieldFrames, _speedBoostFrames) < 60;
 
   int _sideLaserFrames = 0;
   bool get sideLaserActive => _sideLaserFrames > 0;
@@ -113,36 +120,41 @@ class PlayerState extends Node {
 
   void flashBackgroundSprite(Sprite sprite) {
     sprite.motions.stopAll();
-    MotionTween flash = new MotionTween<Color>(
-      (a) { sprite.colorOverlay = a; },
-      new Color(0x66ccfff0),
-      new Color(0x00ccfff0),
-      0.3);
+    MotionTween flash = MotionTween<Color>((a) {
+      sprite.colorOverlay = a;
+    }, const Color(0x66ccfff0), const Color(0x00ccfff0), 0.3);
     sprite.motions.run(flash);
   }
 
+  @override
   void update(double dt) {
-    if (_shieldFrames > 0)
+    if (_shieldFrames > 0) {
       _shieldFrames--;
-    if (_sideLaserFrames > 0)
+    }
+    if (_sideLaserFrames > 0) {
       _sideLaserFrames--;
-    if (_speedLaserFrames > 0)
+    }
+    if (_speedLaserFrames > 0) {
       _speedLaserFrames--;
-    if (_speedBoostFrames > 0)
+    }
+    if (_speedBoostFrames > 0) {
       _speedBoostFrames--;
+    }
 
     // Update speed
     if (boss != null) {
       Offset globalBossPos = boss!.convertPointToBoxSpace(Offset.zero);
-      if (globalBossPos.dy > (_gameSizeHeight - 400.0))
+      if (globalBossPos.dy > (_gameSizeHeight - 400.0)) {
         _scrollSpeedTarget = 0.0;
-      else
+      } else {
         _scrollSpeedTarget = normalScrollSpeed;
+      }
     } else {
-      if (speedBoostActive)
+      if (speedBoostActive) {
         _scrollSpeedTarget = normalScrollSpeed * 6.0;
-      else
+      } else {
         _scrollSpeedTarget = normalScrollSpeed;
+      }
     }
 
     scrollSpeed = GameMath.filter(scrollSpeed, _scrollSpeedTarget, 0.1);
@@ -161,10 +173,11 @@ class ScoreDisplay extends Node {
     _dirtyScore = true;
   }
 
-  SpriteSheet _sheetUI;
+  final SpriteSheet _sheetUI;
 
   bool _dirtyScore = true;
 
+  @override
   void update(double dt) {
     if (_dirtyScore) {
       removeAllChildren();
@@ -173,8 +186,8 @@ class ScoreDisplay extends Node {
       double xPos = -37.0;
       for (int i = scoreStr.length - 1; i >= 0; i--) {
         String numStr = scoreStr.substring(i, i + 1);
-        Sprite numSprite = new Sprite(_sheetUI["number_$numStr.png"]!);
-        numSprite.position = new Offset(xPos, 0.0);
+        Sprite numSprite = Sprite(_sheetUI["number_$numStr.png"]!);
+        numSprite.position = Offset(xPos, 0.0);
         addChild(numSprite);
         xPos -= 37.0;
       }

@@ -1,20 +1,26 @@
 part of game;
 
 class TextureImage extends StatelessWidget {
-  TextureImage(
-      {Key? key, required this.texture, this.width: 128.0, this.height: 128.0})
-      : super(key: key);
+  const TextureImage({
+    Key? key,
+    required this.texture,
+    this.width = 128.0,
+    this.height = 128.0,
+  }) : super(key: key);
 
   final SpriteTexture texture;
   final double width;
   final double height;
 
+  @override
   Widget build(BuildContext context) {
-    return new Container(
-        width: width,
-        height: height,
-        child: new CustomPaint(
-            painter: new TextureImagePainter(texture, width, height)));
+    return SizedBox(
+      width: width,
+      height: height,
+      child: CustomPaint(
+        painter: TextureImagePainter(texture, width, height),
+      ),
+    );
   }
 }
 
@@ -25,33 +31,37 @@ class TextureImagePainter extends CustomPainter {
   final double width;
   final double height;
 
+  @override
   void paint(Canvas canvas, Size size) {
     canvas.save();
     canvas.scale(
-        size.width / texture.size.width, size.height / texture.size.height);
-    texture.drawTexture(canvas, Offset.zero, new Paint());
+      size.width / texture.size.width,
+      size.height / texture.size.height,
+    );
+    texture.drawTexture(canvas, Offset.zero, Paint());
     canvas.restore();
   }
 
-  bool shouldRepaint(TextureImagePainter oldPainter) {
-    return oldPainter.texture != texture ||
-        oldPainter.width != width ||
-        oldPainter.height != height;
+  @override
+  bool shouldRepaint(TextureImagePainter oldDelegate) {
+    return oldDelegate.texture != texture ||
+        oldDelegate.width != width ||
+        oldDelegate.height != height;
   }
 }
 
 class TextureButton extends StatefulWidget {
-  TextureButton(
+  const TextureButton(
       {Key? key,
       required this.onPressed,
       required this.texture,
       this.textureDown,
-      this.width: 128.0,
-      this.height: 128.0,
+      this.width = 128.0,
+      this.height = 128.0,
       this.label,
       this.textStyle,
-      this.textAlign: TextAlign.center,
-      this.labelOffset: Offset.zero})
+      this.textAlign = TextAlign.center,
+      this.labelOffset = Offset.zero})
       : super(key: key);
 
   final VoidCallback onPressed;
@@ -64,19 +74,21 @@ class TextureButton extends StatefulWidget {
   final double height;
   final Offset labelOffset;
 
-  TextureButtonState createState() => new TextureButtonState();
+  @override
+  TextureButtonState createState() => TextureButtonState();
 }
 
 class TextureButtonState extends State<TextureButton> {
   bool _highlight = false;
 
+  @override
   Widget build(BuildContext context) {
-    return new GestureDetector(
-        child: new Container(
+    return GestureDetector(
+        child: SizedBox(
             width: widget.width,
             height: widget.height,
-            child: new CustomPaint(
-                painter: new TextureButtonPainter(widget, _highlight))),
+            child:
+                CustomPaint(painter: TextureButtonPainter(widget, _highlight))),
         onTapDown: (_) {
           setState(() {
             _highlight = true;
@@ -86,7 +98,7 @@ class TextureButtonState extends State<TextureButton> {
           setState(() {
             _highlight = false;
           });
-          if (widget.onPressed != null) widget.onPressed();
+          widget.onPressed();
         },
         onTapCancel: () {
           setState(() {
@@ -102,43 +114,50 @@ class TextureButtonPainter extends CustomPainter {
   final TextureButton config;
   final bool highlight;
 
+  @override
   void paint(Canvas canvas, Size size) {
-    if (config.texture != null) {
-      canvas.save();
-      if (highlight) {
-        // Draw down state
-        if (config.textureDown != null) {
-          canvas.scale(size.width / config.textureDown!.size.width,
-              size.height / config.textureDown!.size.height);
-          config.textureDown!.drawTexture(canvas, Offset.zero, new Paint());
-        } else {
-          canvas.scale(size.width / config.texture.size.width,
-              size.height / config.texture.size.height);
-          config.texture.drawTexture(
-              canvas,
-              Offset.zero,
-              new Paint()
-                ..colorFilter = new ColorFilter.mode(
-                    new Color(0x66000000), BlendMode.srcATop));
-        }
+    canvas.save();
+    if (highlight) {
+      // Draw down state
+      if (config.textureDown != null) {
+        canvas.scale(
+          size.width / config.textureDown!.size.width,
+          size.height / config.textureDown!.size.height,
+        );
+        config.textureDown!.drawTexture(canvas, Offset.zero, Paint());
       } else {
-        // Draw up state
-        canvas.scale(size.width / config.texture.size.width,
-            size.height / config.texture.size.height);
-        config.texture.drawTexture(canvas, Offset.zero, new Paint());
+        canvas.scale(
+          size.width / config.texture.size.width,
+          size.height / config.texture.size.height,
+        );
+        config.texture.drawTexture(
+          canvas,
+          Offset.zero,
+          Paint()
+            ..colorFilter = const ColorFilter.mode(
+              Color(0x66000000),
+              BlendMode.srcATop,
+            ),
+        );
       }
-      canvas.restore();
+    } else {
+      // Draw up state
+      canvas.scale(size.width / config.texture.size.width,
+          size.height / config.texture.size.height);
+      config.texture.drawTexture(canvas, Offset.zero, Paint());
     }
+    canvas.restore();
 
     if (config.label != null) {
       TextStyle style;
-      if (config.textStyle == null)
-        style = new TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700);
-      else
+      if (config.textStyle == null) {
+        style = const TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700);
+      } else {
         style = config.textStyle!;
+      }
 
-      TextSpan textSpan = new TextSpan(style: style, text: config.label);
-      TextPainter painter = new TextPainter(
+      TextSpan textSpan = TextSpan(style: style, text: config.label);
+      TextPainter painter = TextPainter(
         text: textSpan,
         textAlign: config.textAlign,
         textDirection: TextDirection.ltr,
@@ -147,18 +166,19 @@ class TextureButtonPainter extends CustomPainter {
       painter.layout(minWidth: size.width, maxWidth: size.width);
       painter.paint(
           canvas,
-          new Offset(0.0, size.height / 2.0 - painter.height / 2.0) +
+          Offset(0.0, size.height / 2.0 - painter.height / 2.0) +
               config.labelOffset);
     }
   }
 
-  bool shouldRepaint(TextureButtonPainter oldPainter) {
-    return oldPainter.highlight != highlight ||
-        oldPainter.config.texture != config.texture ||
-        oldPainter.config.textureDown != config.textureDown ||
-        oldPainter.config.textStyle != config.textStyle ||
-        oldPainter.config.label != config.label ||
-        oldPainter.config.width != config.width ||
-        oldPainter.config.height != config.height;
+  @override
+  bool shouldRepaint(TextureButtonPainter oldDelegate) {
+    return oldDelegate.highlight != highlight ||
+        oldDelegate.config.texture != config.texture ||
+        oldDelegate.config.textureDown != config.textureDown ||
+        oldDelegate.config.textStyle != config.textStyle ||
+        oldDelegate.config.label != config.label ||
+        oldDelegate.config.width != config.width ||
+        oldDelegate.config.height != config.height;
   }
 }

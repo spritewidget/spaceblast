@@ -38,7 +38,7 @@ class PersistantGameState {
 
   int coins = 0;
 
-  List<int> _powerupLevels = <int>[0, 0, 0, 0];
+  final List<int> _powerupLevels = <int>[0, 0, 0, 0];
 
   int powerupLevel(PowerUpType type) {
     return _powerupLevels[type.index];
@@ -51,8 +51,9 @@ class PersistantGameState {
   int get currentStartingLevel => _currentStartingLevel;
 
   set currentStartingLevel(int currentStartingLevel) {
-    if (currentStartingLevel >= 0 && currentStartingLevel <= maxStartingLevel)
+    if (currentStartingLevel >= 0 && currentStartingLevel <= maxStartingLevel) {
       _currentStartingLevel = currentStartingLevel;
+    }
   }
 
   int maxStartingLevel = 0;
@@ -80,10 +81,11 @@ class PersistantGameState {
   int powerUpFrames(PowerUpType type) {
     int level = powerupLevel(type);
 
-    if (type == PowerUpType.speedBoost)
+    if (type == PowerUpType.speedBoost) {
       return 150 + 25 * level;
-    else
+    } else {
       return 300 + 50 * level;
+    }
   }
 
   bool upgradePowerUp(PowerUpType type) {

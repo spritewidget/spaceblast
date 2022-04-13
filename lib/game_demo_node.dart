@@ -1,55 +1,54 @@
 part of game;
 
-final double _gameSizeWidth = 320.0;
-double _gameSizeHeight = 320.0;
+var _gameSizeHeight = 320.0;
 
-final double _chunkSpacing = 640.0;
-final int _chunksPerLevel = 9;
+const _chunkSpacing = 640.0;
+const int _chunksPerLevel = 9;
 
-final bool _drawDebug = false;
+const bool _drawDebug = false;
 
-typedef void GameOverCallback(int score, int coins, int levelReached);
+typedef GameOverCallback = void Function(
+    int score, int coins, int levelReached);
 
 class GameDemoNode extends NodeWithSize {
   GameDemoNode(this._images, this._spritesGame, this._spritesUI, this._sounds,
       this._gameState, this._gameOverCallback)
-      : super(new Size(320.0, 320.0)) {
+      : super(const Size(320.0, 320.0)) {
     // Add background
-    _background = new RepeatedImage(_images["assets/starfield.png"]!);
+    _background = RepeatedImage(_images["assets/starfield.png"]!);
     addChild(_background);
 
     // Create starfield
-    _starField = new StarField(_spritesGame, 200);
+    _starField = StarField(_spritesGame, 200);
     addChild(_starField);
 
     // Add nebula
-    _nebula =
-        new RepeatedImage(_images["assets/nebula.png"]!, ui.BlendMode.plus);
+    _nebula = RepeatedImage(_images["assets/nebula.png"]!, ui.BlendMode.plus);
     addChild(_nebula);
 
     // Setup game screen, it will always be anchored to the bottom of the screen
-    _gameScreen = new Node();
+    _gameScreen = Node();
     addChild(_gameScreen);
 
     // Setup the level and add it to the screen, the level is the node where
     // all our game objects live. It is moved to scroll the game
-    _level = new Level();
+    _level = Level();
     _gameScreen.addChild(_level);
 
     // Add heads up display
-    _playerState = new PlayerState(_spritesUI, _spritesGame, _gameState);
-    _playerState.position = Offset(0.0, 20.0);
+    _playerState = PlayerState(_spritesUI, _spritesGame, _gameState);
+    _playerState.position = const Offset(0.0, 20.0);
     addChild(_playerState);
 
     _objectFactory =
-        new GameObjectFactory(_spritesGame, _sounds, _level, _playerState);
+        GameObjectFactory(_spritesGame, _sounds, _level, _playerState);
 
-    _level.ship = new Ship(_objectFactory);
+    _level.ship = Ship(_objectFactory);
     _level.ship.setupActions();
     _level.addChild(_level.ship);
 
     // Add the joystick
-    _joystick = new VirtualJoystick();
+    _joystick = VirtualJoystick();
     _gameScreen.addChild(_joystick);
 
     // Add initial game objects
@@ -59,13 +58,13 @@ class GameDemoNode extends NodeWithSize {
   final PersistantGameState _gameState;
 
   // Resources
-  ImageMap _images;
-  SoundAssets _sounds;
-  SpriteSheet _spritesGame;
-  SpriteSheet _spritesUI;
+  final ImageMap _images;
+  final SoundAssets _sounds;
+  final SpriteSheet _spritesGame;
+  final SpriteSheet _spritesUI;
 
   // Callback
-  GameOverCallback _gameOverCallback;
+  final GameOverCallback _gameOverCallback;
 
   // Game screen nodes
   late Node _gameScreen;
@@ -83,15 +82,17 @@ class GameDemoNode extends NodeWithSize {
   double _scroll = 0.0;
 
   int _framesToFire = 0;
-  int _framesBetweenShots = 20;
+  final int _framesBetweenShots = 20;
 
   bool _gameOver = false;
 
+  @override
   void spriteBoxPerformedLayout() {
     _gameSizeHeight = spriteBox!.visibleArea!.height;
-    _gameScreen.position = new Offset(0.0, _gameSizeHeight);
+    _gameScreen.position = Offset(0.0, _gameSizeHeight);
   }
 
+  @override
   void update(double dt) {
     // Scroll the level
     _scroll = _level.scroll(_playerState.scrollSpeed);
@@ -156,13 +157,13 @@ class GameDemoNode extends NodeWithSize {
     }
 
     // Check for collsions between ship and objects that can damage the ship
-    List<Node> nodes = new List<Node>.from(_level.children);
+    List<Node> nodes = List<Node>.from(_level.children);
     for (Node node in nodes) {
       if (node is GameObject && node.canDamageShip) {
         if (node.collidingWith(_level.ship)) {
           if (_playerState.shieldActive) {
             // Hit, but saved by the shield!
-            if (!(node is EnemyBoss)) node.destroy();
+            if (node is! EnemyBoss) node.destroy();
           } else {
             // The ship was hit :(
             killShip();
@@ -192,8 +193,8 @@ class GameDemoNode extends NodeWithSize {
     int part = chunk % _chunksPerLevel;
 
     if (part == 0) {
-      LevelLabel lbl = new LevelLabel(_objectFactory, level + 1);
-      lbl.position = new Offset(0.0, yPos + _chunkSpacing / 2.0 - 150.0);
+      LevelLabel lbl = LevelLabel(_objectFactory, level + 1);
+      lbl.position = Offset(0.0, yPos + _chunkSpacing / 2.0 - 150.0);
 
       _topLevelReached = level;
       _level.addChild(lbl);
@@ -219,21 +220,21 @@ class GameDemoNode extends NodeWithSize {
   void fire() {
     int laserLevel = _objectFactory.playerState.laserLevel;
 
-    Laser shot0 = new Laser(_objectFactory, laserLevel, -90.0);
-    shot0.position = _level.ship.position + new Offset(17.0, -10.0);
+    Laser shot0 = Laser(_objectFactory, laserLevel, -90.0);
+    shot0.position = _level.ship.position + const Offset(17.0, -10.0);
     _level.addChild(shot0);
 
-    Laser shot1 = new Laser(_objectFactory, laserLevel, -90.0);
-    shot1.position = _level.ship.position + new Offset(-17.0, -10.0);
+    Laser shot1 = Laser(_objectFactory, laserLevel, -90.0);
+    shot1.position = _level.ship.position + const Offset(-17.0, -10.0);
     _level.addChild(shot1);
 
     if (_playerState.sideLaserActive) {
-      Laser shot2 = new Laser(_objectFactory, laserLevel, -45.0);
-      shot2.position = _level.ship.position + new Offset(17.0, -10.0);
+      Laser shot2 = Laser(_objectFactory, laserLevel, -45.0);
+      shot2.position = _level.ship.position + const Offset(17.0, -10.0);
       _level.addChild(shot2);
 
-      Laser shot3 = new Laser(_objectFactory, laserLevel, -135.0);
-      shot3.position = _level.ship.position + new Offset(-17.0, -10.0);
+      Laser shot3 = Laser(_objectFactory, laserLevel, -135.0);
+      shot3.position = _level.ship.position + const Offset(-17.0, -10.0);
       _level.addChild(shot3);
     }
   }
@@ -245,20 +246,20 @@ class GameDemoNode extends NodeWithSize {
     _sounds.play("explosion_player");
 
     // Add explosion
-    ExplosionBig explo = new ExplosionBig(_spritesGame);
+    ExplosionBig explo = ExplosionBig(_spritesGame);
     explo.scale = 1.5;
     explo.position = _level.ship.position;
     _level.addChild(explo);
 
     // Add flash
-    Flash flash = new Flash(size, 1.0);
+    Flash flash = Flash(size, 1.0);
     addChild(flash);
 
     // Set the state to game over
     _gameOver = true;
 
     // Return to main scene and report the score back in 2 seconds
-    new Timer(new Duration(seconds: 2), () {
+    Timer(const Duration(seconds: 2), () {
       _gameOverCallback(
           _playerState.score, _playerState.coins, _topLevelReached);
     });
@@ -267,13 +268,13 @@ class GameDemoNode extends NodeWithSize {
 
 class Level extends Node {
   Level() {
-    position = new Offset(160.0, 0.0);
+    position = const Offset(160.0, 0.0);
   }
 
   late Ship ship;
 
   double scroll(double scrollSpeed) {
-    position += new Offset(0.0, scrollSpeed);
+    position += Offset(0.0, scrollSpeed);
     return position.dy;
   }
 }
