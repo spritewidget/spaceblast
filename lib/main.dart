@@ -11,18 +11,18 @@ import 'package:spritewidget/spritewidget.dart';
 
 import 'game_demo.dart';
 
-PersistantGameState _gameState;
+late PersistantGameState _gameState;
 
 final Color _darkTextColor = new Color(0xff3c3f4a);
 
 typedef void SelectTabCallback(int index);
 typedef void UpgradePowerUpCallback(PowerUpType type);
 
-ImageMap _imageMap;
-SpriteSheet _spriteSheet;
-SpriteSheet _spriteSheetUI;
+late ImageMap _imageMap;
+late SpriteSheet _spriteSheet;
+late SpriteSheet _spriteSheetUI;
 
-SoundAssets _sounds;
+late SoundAssets _sounds;
 
 main() async {
   // We need to call ensureInitialized if we are loading images before runApp
@@ -73,10 +73,10 @@ main() async {
 
   // Load sprite sheets
   String json = await rootBundle.loadString('assets/sprites.json');
-  _spriteSheet = new SpriteSheet(_imageMap['assets/sprites.png'], json);
+  _spriteSheet = new SpriteSheet(_imageMap['assets/sprites.png']!, json);
 
   json = await rootBundle.loadString('assets/game_ui.json');
-  _spriteSheetUI = new SpriteSheet(_imageMap['assets/game_ui.png'], json);
+  _spriteSheetUI = new SpriteSheet(_imageMap['assets/game_ui.png']!, json);
 
   assert(_spriteSheet.image != null);
 
@@ -162,23 +162,23 @@ class GameDemoState extends State<GameDemo> {
 class GameScene extends StatefulWidget {
   GameScene({this.onGameOver, this.gameState});
 
-  final GameOverCallback onGameOver;
-  final PersistantGameState gameState;
+  final GameOverCallback? onGameOver;
+  final PersistantGameState? gameState;
 
   State<GameScene> createState() => new GameSceneState();
 }
 
 class GameSceneState extends State<GameScene> {
-  NodeWithSize _game;
+  late NodeWithSize _game;
 
   void initState() {
     super.initState();
 
     _game = new GameDemoNode(
-        _imageMap, _spriteSheet, _spriteSheetUI, _sounds, widget.gameState,
+        _imageMap, _spriteSheet, _spriteSheetUI, _sounds, widget.gameState!,
         (int score, int coins, int levelReached) {
       Navigator.pop(context);
-      widget.onGameOver(score, coins, levelReached);
+      widget.onGameOver!(score, coins, levelReached);
     });
   }
 
@@ -192,11 +192,11 @@ class GameSceneState extends State<GameScene> {
 
 class MainScene extends StatefulWidget {
   MainScene(
-      {this.gameState,
-      this.onUpgradePowerUp,
-      this.onUpgradeLaser,
-      this.onStartLevelUp,
-      this.onStartLevelDown});
+      {required this.gameState,
+      required this.onUpgradePowerUp,
+      required this.onUpgradeLaser,
+      required this.onStartLevelUp,
+      required this.onStartLevelDown});
 
   final PersistantGameState gameState;
   final UpgradePowerUpCallback onUpgradePowerUp;
@@ -271,10 +271,14 @@ class MainSceneState extends State<MainScene> {
 }
 
 class TopBar extends StatelessWidget {
-  TopBar({this.selection, this.onSelectTab, this.gameState});
+  TopBar({
+    // required this.selection,
+    // required this.onSelectTab,
+    required this.gameState,
+  });
 
-  final int selection;
-  final SelectTabCallback onSelectTab;
+  // final int selection;
+  // final SelectTabCallback onSelectTab;
   final PersistantGameState gameState;
 
   Widget build(BuildContext context) {
@@ -306,7 +310,7 @@ class TopBar extends StatelessWidget {
           left: 18.0,
           top: 80.0,
           child: new TextureImage(
-              texture: _spriteSheetUI['icn_crystal.png'],
+              texture: _spriteSheetUI['icn_crystal.png']!,
               width: 12.0,
               height: 18.0)),
       new Positioned(
@@ -322,13 +326,14 @@ class TopBar extends StatelessWidget {
 }
 
 class CenterArea extends StatelessWidget {
-  CenterArea(
-      {this.selection,
-      this.onUpgradeLaser,
-      this.gameState,
-      this.onUpgradePowerUp});
+  CenterArea({
+    // required this.selection,
+    required this.onUpgradeLaser,
+    required this.gameState,
+    required this.onUpgradePowerUp,
+  });
 
-  final int selection;
+  // final int selection;
   final VoidCallback onUpgradeLaser;
   final UpgradePowerUpCallback onUpgradePowerUp;
   final PersistantGameState gameState;
@@ -363,7 +368,7 @@ class CenterArea extends StatelessWidget {
         padding: new EdgeInsets.all(8.0),
         child: new Column(children: <Widget>[
           new TextureButton(
-              texture: _spriteSheetUI['btn_powerup_${type.index}.png'],
+              texture: _spriteSheetUI['btn_powerup_${type.index}.png']!,
               width: 57.0,
               height: 57.0,
               label: "${gameState.powerUpUpgradePrice(type)}",
@@ -386,7 +391,7 @@ class CenterArea extends StatelessWidget {
         padding: new EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 18.0),
         child: new Stack(children: <Widget>[
           new TextureButton(
-              texture: _spriteSheetUI['btn_laser_upgrade.png'],
+              texture: _spriteSheetUI['btn_laser_upgrade.png']!,
               width: 137.0,
               height: 63.0,
               label: "${gameState.laserUpgradePrice()}",
@@ -411,10 +416,10 @@ class CenterArea extends StatelessWidget {
 
 class BottomBar extends StatelessWidget {
   BottomBar(
-      {this.onPlay,
-      this.gameState,
-      this.onStartLevelUp,
-      this.onStartLevelDown});
+      {required this.onPlay,
+      required this.gameState,
+      required this.onStartLevelUp,
+      required this.onStartLevelDown});
 
   final VoidCallback onPlay;
   final VoidCallback onStartLevelUp;
@@ -427,7 +432,7 @@ class BottomBar extends StatelessWidget {
           left: 18.0,
           top: 14.0,
           child: new TextureImage(
-              texture: _spriteSheetUI['level_display.png'],
+              texture: _spriteSheetUI['level_display.png']!,
               width: 62.0,
               height: 62.0)),
       new Positioned(
@@ -435,14 +440,14 @@ class BottomBar extends StatelessWidget {
           top: 14.0,
           child: new TextureImage(
               texture: _spriteSheetUI[
-                  'level_display_${gameState.currentStartingLevel + 1}.png'],
+                  'level_display_${gameState.currentStartingLevel + 1}.png']!,
               width: 62.0,
               height: 62.0)),
       new Positioned(
           left: 85.0,
           top: 14.0,
           child: new TextureButton(
-              texture: _spriteSheetUI['btn_level_up.png'],
+              texture: _spriteSheetUI['btn_level_up.png']!,
               width: 30.0,
               height: 30.0,
               onPressed: onStartLevelUp)),
@@ -450,7 +455,7 @@ class BottomBar extends StatelessWidget {
           left: 85.0,
           top: 46.0,
           child: new TextureButton(
-              texture: _spriteSheetUI['btn_level_down.png'],
+              texture: _spriteSheetUI['btn_level_down.png']!,
               width: 30.0,
               height: 30.0,
               onPressed: onStartLevelDown)),
@@ -459,7 +464,7 @@ class BottomBar extends StatelessWidget {
           top: 14.0,
           child: new TextureButton(
               onPressed: onPlay,
-              texture: _spriteSheetUI['btn_play.png'],
+              texture: _spriteSheetUI['btn_play.png']!,
               label: "PLAY",
               textStyle: new TextStyle(
                   fontFamily: "Orbitron", fontSize: 28.0, letterSpacing: 3.0),
@@ -475,7 +480,7 @@ class MainSceneBackground extends StatefulWidget {
 }
 
 class MainSceneBackgroundState extends State<MainSceneBackground> {
-  MainSceneBackgroundNode _backgroundNode;
+  late MainSceneBackgroundNode _backgroundNode;
 
   void initState() {
     super.initState();
@@ -491,31 +496,32 @@ class MainSceneBackgroundState extends State<MainSceneBackground> {
 }
 
 class MainSceneBackgroundNode extends NodeWithSize {
-  Sprite _bgTop;
-  Sprite _bgBottom;
-  RepeatedImage _background;
-  RepeatedImage _nebula;
+  late Sprite _bgTop;
+  late Sprite _bgBottom;
+  late RepeatedImage _background;
+  late RepeatedImage _nebula;
 
   MainSceneBackgroundNode() : super(new Size(320.0, 320.0)) {
     assert(_spriteSheet.image != null);
 
     // Add background
-    _background = new RepeatedImage(_imageMap["assets/starfield.png"]);
+    _background = new RepeatedImage(_imageMap["assets/starfield.png"]!);
     addChild(_background);
 
     StarField starField = new StarField(_spriteSheet, 200, true);
     addChild(starField);
 
     // Add nebula
-    _nebula = new RepeatedImage(_imageMap["assets/nebula.png"], BlendMode.plus);
+    _nebula =
+        new RepeatedImage(_imageMap["assets/nebula.png"]!, BlendMode.plus);
     addChild(_nebula);
 
-    _bgTop = new Sprite.fromImage(_imageMap["assets/ui_bg_top.png"]);
+    _bgTop = new Sprite.fromImage(_imageMap["assets/ui_bg_top.png"]!);
     _bgTop.pivot = Offset.zero;
     _bgTop.size = new Size(320.0, 108.0);
     addChild(_bgTop);
 
-    _bgBottom = new Sprite.fromImage(_imageMap["assets/ui_bg_bottom.png"]);
+    _bgBottom = new Sprite.fromImage(_imageMap["assets/ui_bg_bottom.png"]!);
     _bgBottom.pivot = new Offset(0.0, 1.0);
     _bgBottom.size = new Size(320.0, 97.0);
     addChild(_bgBottom);
@@ -528,7 +534,7 @@ class MainSceneBackgroundNode extends NodeWithSize {
   }
 
   void spriteBoxPerformedLayout() {
-    _bgBottom.position = new Offset(0.0, spriteBox.visibleArea.size.height);
+    _bgBottom.position = new Offset(0.0, spriteBox!.visibleArea!.size.height);
   }
 
   void update(double dt) {
@@ -538,7 +544,7 @@ class MainSceneBackgroundNode extends NodeWithSize {
 }
 
 class LaserDisplay extends StatelessWidget {
-  LaserDisplay({this.level});
+  LaserDisplay({required this.level});
 
   final int level;
 

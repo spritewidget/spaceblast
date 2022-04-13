@@ -11,17 +11,11 @@ final bool _drawDebug = false;
 typedef void GameOverCallback(int score, int coins, int levelReached);
 
 class GameDemoNode extends NodeWithSize {
-
-  GameDemoNode(
-    this._images,
-    this._spritesGame,
-    this._spritesUI,
-    this._sounds,
-    this._gameState,
-    this._gameOverCallback
-  ): super(new Size(320.0, 320.0)) {
+  GameDemoNode(this._images, this._spritesGame, this._spritesUI, this._sounds,
+      this._gameState, this._gameOverCallback)
+      : super(new Size(320.0, 320.0)) {
     // Add background
-    _background = new RepeatedImage(_images["assets/starfield.png"]);
+    _background = new RepeatedImage(_images["assets/starfield.png"]!);
     addChild(_background);
 
     // Create starfield
@@ -29,7 +23,8 @@ class GameDemoNode extends NodeWithSize {
     addChild(_starField);
 
     // Add nebula
-    _nebula = new RepeatedImage(_images["assets/nebula.png"], ui.BlendMode.plus);
+    _nebula =
+        new RepeatedImage(_images["assets/nebula.png"]!, ui.BlendMode.plus);
     addChild(_nebula);
 
     // Setup game screen, it will always be anchored to the bottom of the screen
@@ -46,7 +41,8 @@ class GameDemoNode extends NodeWithSize {
     _playerState.position = Offset(0.0, 20.0);
     addChild(_playerState);
 
-    _objectFactory = new GameObjectFactory(_spritesGame, _sounds, _level, _playerState);
+    _objectFactory =
+        new GameObjectFactory(_spritesGame, _sounds, _level, _playerState);
 
     _level.ship = new Ship(_objectFactory);
     _level.ship.setupActions();
@@ -72,16 +68,16 @@ class GameDemoNode extends NodeWithSize {
   GameOverCallback _gameOverCallback;
 
   // Game screen nodes
-  Node _gameScreen;
-  VirtualJoystick _joystick;
+  late Node _gameScreen;
+  late VirtualJoystick _joystick;
 
-  GameObjectFactory _objectFactory;
-  Level _level;
+  late GameObjectFactory _objectFactory;
+  late Level _level;
   int _topLevelReached = 0;
-  StarField _starField;
-  RepeatedImage _background;
-  RepeatedImage _nebula;
-  PlayerState _playerState;
+  late StarField _starField;
+  late RepeatedImage _background;
+  late RepeatedImage _nebula;
+  late PlayerState _playerState;
 
   // Game properties
   double _scroll = 0.0;
@@ -92,7 +88,7 @@ class GameDemoNode extends NodeWithSize {
   bool _gameOver = false;
 
   void spriteBoxPerformedLayout() {
-    _gameSizeHeight = spriteBox.visibleArea.height;
+    _gameSizeHeight = spriteBox!.visibleArea!.height;
     _gameScreen.position = new Offset(0.0, _gameSizeHeight);
   }
 
@@ -115,7 +111,9 @@ class GameDemoNode extends NodeWithSize {
     // Add shots
     if (_framesToFire == 0 && _joystick.isDown && !_gameOver) {
       fire();
-      _framesToFire = (_playerState.speedLaserActive) ? _framesBetweenShots ~/ 2 : _framesBetweenShots;
+      _framesToFire = (_playerState.speedLaserActive)
+          ? _framesBetweenShots ~/ 2
+          : _framesBetweenShots;
     }
     if (_framesToFire > 0) _framesToFire--;
 
@@ -164,8 +162,7 @@ class GameDemoNode extends NodeWithSize {
         if (node.collidingWith(_level.ship)) {
           if (_playerState.shieldActive) {
             // Hit, but saved by the shield!
-            if (!(node is EnemyBoss))
-              node.destroy();
+            if (!(node is EnemyBoss)) node.destroy();
           } else {
             // The ship was hit :(
             killShip();
@@ -183,11 +180,8 @@ class GameDemoNode extends NodeWithSize {
   int _chunk = 0;
 
   void addObjects() {
-
     while (_scroll + _chunkSpacing >= _chunk * _chunkSpacing) {
-      addLevelChunk(
-        _chunk,
-        -_chunk * _chunkSpacing - _chunkSpacing);
+      addLevelChunk(_chunk, -_chunk * _chunkSpacing - _chunkSpacing);
 
       _chunk += 1;
     }
@@ -264,7 +258,10 @@ class GameDemoNode extends NodeWithSize {
     _gameOver = true;
 
     // Return to main scene and report the score back in 2 seconds
-    new Timer(new Duration(seconds: 2), () { _gameOverCallback(_playerState.score, _playerState.coins, _topLevelReached); });
+    new Timer(new Duration(seconds: 2), () {
+      _gameOverCallback(
+          _playerState.score, _playerState.coins, _topLevelReached);
+    });
   }
 }
 
@@ -273,7 +270,7 @@ class Level extends Node {
     position = new Offset(160.0, 0.0);
   }
 
-  Ship ship;
+  late Ship ship;
 
   double scroll(double scrollSpeed) {
     position += new Offset(0.0, scrollSpeed);

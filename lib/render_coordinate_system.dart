@@ -7,31 +7,29 @@ enum CoordinateSystemType {
 }
 
 class RenderCoordinateSystem extends RenderProxyBox {
-  RenderCoordinateSystem({
-    Size systemSize,
-    CoordinateSystemType systemType,
-    RenderBox child
-  }) : super(child) {
+  RenderCoordinateSystem(
+      {required Size systemSize,
+      required CoordinateSystemType systemType,
+      RenderBox? child})
+      : super(child) {
     assert(systemSize != null);
     assert(systemType != null);
-    this.systemSize = systemSize;
-    this.systemType = systemType;
+    _systemSize = systemSize;
+    _systemType = systemType;
   }
 
   Size get systemSize => _systemSize;
-  Size _systemSize;
+  late Size _systemSize;
   set systemSize(Size systemSize) {
-    if (_systemSize == systemSize)
-      return;
+    if (_systemSize == systemSize) return;
     _systemSize = systemSize;
     markNeedsPaint();
   }
 
   CoordinateSystemType get systemType => _systemType;
-  CoordinateSystemType _systemType;
+  late CoordinateSystemType _systemType;
   set systemType(CoordinateSystemType systemType) {
-    if (_systemType == systemType)
-      return;
+    if (_systemType == systemType) return;
     _systemType = systemType;
     markNeedsPaint();
   }
@@ -40,17 +38,17 @@ class RenderCoordinateSystem extends RenderProxyBox {
     double scaleX = 1.0;
     double scaleY = 1.0;
 
-    switch(systemType) {
+    switch (systemType) {
       case CoordinateSystemType.stretch:
-        scaleX = size.width/systemSize.width;
-        scaleY = size.height/systemSize.height;
+        scaleX = size.width / systemSize.width;
+        scaleY = size.height / systemSize.height;
         break;
       case CoordinateSystemType.fixedWidth:
-        scaleX = size.width/systemSize.width;
+        scaleX = size.width / systemSize.width;
         scaleY = scaleX;
         break;
       case CoordinateSystemType.fixedHeight:
-        scaleY = size.height/systemSize.height;
+        scaleY = size.height / systemSize.height;
         scaleX = scaleY;
         break;
       default:
@@ -63,7 +61,7 @@ class RenderCoordinateSystem extends RenderProxyBox {
     return transformMatrix;
   }
 
-  bool hitTest(HitTestResult result, { Offset position }) {
+  bool hitTest(HitTestResult result, {required Offset position}) {
     Matrix4 inverse = new Matrix4.zero();
     // TODO(abarth): Check the determinant for degeneracy.
     inverse.copyInverse(_effectiveTransform);
@@ -71,13 +69,13 @@ class RenderCoordinateSystem extends RenderProxyBox {
     Vector3 position3 = new Vector3(position.dx, position.dy, 0.0);
     Vector3 transformed3 = inverse.transform3(position3);
     Offset transformed = new Offset(transformed3.x, transformed3.y);
-    return super.hitTest(result, position: transformed);
+    return super.hitTest(result as BoxHitTestResult, position: transformed);
   }
 
   void paint(PaintingContext context, Offset offset) {
     if (child != null) {
       Matrix4 transform = _effectiveTransform;
-      Offset childOffset = MatrixUtils.getAsTranslation(transform);
+      Offset? childOffset = MatrixUtils.getAsTranslation(transform);
       if (childOffset == null)
         context.pushTransform(needsCompositing, offset, transform, super.paint);
       else
@@ -108,7 +106,8 @@ class RenderCoordinateSystem extends RenderProxyBox {
     double yScale = _effectiveTransform[5];
 
     if (child != null) {
-      child.layout(new BoxConstraints.tightFor(width: size.width / xScale, height: size.height / yScale));
+      child!.layout(new BoxConstraints.tightFor(
+          width: size.width / xScale, height: size.height / yScale));
     }
   }
 }

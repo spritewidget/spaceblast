@@ -1,10 +1,10 @@
 part of game;
 
 class RepeatedImage extends Node {
-  Sprite _sprite0;
-  Sprite _sprite1;
+  late Sprite _sprite0;
+  late Sprite _sprite1;
 
-  RepeatedImage(ui.Image image, [ui.BlendMode mode]) {
+  RepeatedImage(ui.Image image, [ui.BlendMode? mode]) {
     _sprite0 = new Sprite.fromImage(image);
     _sprite0.size = new Size(1024.0, 1024.0);
     _sprite0.pivot = Offset.zero;

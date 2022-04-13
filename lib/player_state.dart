@@ -3,7 +3,7 @@ part of game;
 class PlayerState extends Node {
   PlayerState(this._sheetUI, this._sheetGame, this._gameState) {
     // Score display
-    _spriteBackgroundScore = new Sprite(_sheetUI["scoreboard.png"]);
+    _spriteBackgroundScore = new Sprite(_sheetUI["scoreboard.png"]!);
     _spriteBackgroundScore.pivot = new Offset(1.0, 0.0);
     _spriteBackgroundScore.scale = 0.35;
     _spriteBackgroundScore.position = new Offset(240.0, 10.0);
@@ -14,7 +14,7 @@ class PlayerState extends Node {
     _spriteBackgroundScore.addChild(_scoreDisplay);
 
     // Coin display
-    _spriteBackgroundCoins = new Sprite(_sheetUI["coinboard.png"]);
+    _spriteBackgroundCoins = new Sprite(_sheetUI["coinboard.png"]!);
     _spriteBackgroundCoins.pivot = new Offset(1.0, 0.0);
     _spriteBackgroundCoins.scale = 0.35;
     _spriteBackgroundCoins.position = new Offset(105.0, 10.0);
@@ -39,12 +39,12 @@ class PlayerState extends Node {
 
   double _scrollSpeedTarget = normalScrollSpeed;
 
-  EnemyBoss boss;
+  EnemyBoss? boss;
 
-  Sprite _spriteBackgroundScore;
-  ScoreDisplay _scoreDisplay;
-  Sprite _spriteBackgroundCoins;
-  ScoreDisplay _coinDisplay;
+  late Sprite _spriteBackgroundScore;
+  late ScoreDisplay _scoreDisplay;
+  late Sprite _spriteBackgroundCoins;
+  late ScoreDisplay _coinDisplay;
 
   int get score => _scoreDisplay.score;
 
@@ -64,7 +64,7 @@ class PlayerState extends Node {
 
     List<Offset> path = <Offset>[startPos, middlePos, finalPos];
 
-    Sprite sprite = new Sprite(_sheetGame["coin.png"]);
+    Sprite sprite = new Sprite(_sheetGame["coin.png"]!);
     sprite.scale = 0.7;
 
     MotionSpline spline = new MotionSpline((Offset a) { sprite.position = a; }, path, 0.5);
@@ -133,7 +133,7 @@ class PlayerState extends Node {
 
     // Update speed
     if (boss != null) {
-      Offset globalBossPos = boss.convertPointToBoxSpace(Offset.zero);
+      Offset globalBossPos = boss!.convertPointToBoxSpace(Offset.zero);
       if (globalBossPos.dy > (_gameSizeHeight - 400.0))
         _scrollSpeedTarget = 0.0;
       else
@@ -173,7 +173,7 @@ class ScoreDisplay extends Node {
       double xPos = -37.0;
       for (int i = scoreStr.length - 1; i >= 0; i--) {
         String numStr = scoreStr.substring(i, i + 1);
-        Sprite numSprite = new Sprite(_sheetUI["number_$numStr.png"]);
+        Sprite numSprite = new Sprite(_sheetUI["number_$numStr.png"]!);
         numSprite.position = new Offset(xPos, 0.0);
         addChild(numSprite);
         xPos -= 37.0;

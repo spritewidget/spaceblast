@@ -1,7 +1,7 @@
 part of game;
 
 class CoordinateSystem extends SingleChildRenderObjectWidget {
-  CoordinateSystem({ Key key, this.systemSize, this.systemType: CoordinateSystemType.fixedWidth, Widget child })
+  CoordinateSystem({ Key? key, required this.systemSize, this.systemType: CoordinateSystemType.fixedWidth, required Widget child })
     : super(key: key, child: child) {
     assert(systemSize != null);
   }

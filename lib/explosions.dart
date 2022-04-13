@@ -10,7 +10,7 @@ class ExplosionBig extends Explosion {
   ExplosionBig(SpriteSheet sheet) {
     // Add particles
     ParticleSystem particlesDebris = new ParticleSystem(
-      sheet["explosion_particle.png"],
+      sheet["explosion_particle.png"]!,
       rotateToMovement: true,
       startRotation:90.0,
       startRotationVar: 0.0,
@@ -30,7 +30,7 @@ class ExplosionBig extends Explosion {
     addChild(particlesDebris);
 
     ParticleSystem particlesFire = new ParticleSystem(
-      sheet["fire_particle.png"],
+      sheet["fire_particle.png"]!,
       colorSequence: new ColorSequence(<Color>[new Color(0xffffff33), new Color(0xffff3333), new Color(0x00ff3333)], <double>[0.0, 0.5, 1.0]),
       numParticlesToEmit: 25,
       emissionRate: 1000.0,
@@ -48,7 +48,7 @@ class ExplosionBig extends Explosion {
     addChild(particlesFire);
 
     // Add ring
-    Sprite spriteRing = new Sprite(sheet["explosion_ring.png"]);
+    Sprite spriteRing = new Sprite(sheet["explosion_ring.png"]!);
     spriteRing.transferMode = ui.BlendMode.plus;
     addChild(spriteRing);
 
@@ -60,7 +60,7 @@ class ExplosionBig extends Explosion {
 
     // Add streaks
     for (int i = 0; i < 5; i++) {
-      Sprite spriteFlare = new Sprite(sheet["explosion_flare.png"]);
+      Sprite spriteFlare = new Sprite(sheet["explosion_flare.png"]!);
       spriteFlare.pivot = new Offset(0.3, 1.0);
       spriteFlare.scaleX = 0.3;
       spriteFlare.transferMode = ui.BlendMode.plus;
@@ -83,7 +83,7 @@ class ExplosionBig extends Explosion {
 class ExplosionMini extends Explosion {
   ExplosionMini(SpriteSheet sheet) {
     for (int i = 0; i < 2; i++) {
-      Sprite star = new Sprite(sheet["star_0.png"]);
+      Sprite star = new Sprite(sheet["star_0.png"]!);
       star.scale = 0.5;
       star.colorOverlay = new Color(0xff95f4fb);
       star.transferMode = ui.BlendMode.plus;

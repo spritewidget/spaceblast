@@ -35,13 +35,13 @@ abstract class GameObject extends Node {
 
   void destroy() {
     if (parent != null) {
-      Explosion explo = createExplosion();
+      Explosion? explo = createExplosion();
       if (explo != null) {
         explo.position = position;
-        parent.addChild(explo);
+        parent!.addChild(explo);
       }
 
-      Collectable powerUp = createPowerUp();
+      Collectable? powerUp = createPowerUp();
       if (powerUp != null) {
         f.addGameObject(powerUp, position);
       }
@@ -66,11 +66,11 @@ abstract class GameObject extends Node {
     }
   }
 
-  Explosion createExplosion() {
+  Explosion? createExplosion() {
     return null;
   }
 
-  Collectable createPowerUp() {
+  Collectable? createPowerUp() {
     return null;
   }
 
@@ -107,12 +107,12 @@ class LevelLabel extends GameObject {
 class Ship extends GameObject {
   Ship(GameObjectFactory f) : super(f) {
     // Add main ship sprite
-    _sprite = new Sprite(f.sheet["ship.png"]);
+    _sprite = new Sprite(f.sheet["ship.png"]!);
     _sprite.scale = 0.3;
     _sprite.rotation = -90.0;
     addChild(_sprite);
 
-    _spriteShield = new Sprite(f.sheet["shield.png"]);
+    _spriteShield = new Sprite(f.sheet["shield.png"]!);
     _spriteShield.scale = 0.35;
     _spriteShield.transferMode = ui.BlendMode.plus;
     addChild(_spriteShield);
@@ -125,8 +125,8 @@ class Ship extends GameObject {
     position = new Offset(0.0, 50.0);
   }
 
-  Sprite _sprite;
-  Sprite _spriteShield;
+  late Sprite _sprite;
+  late Sprite _spriteShield;
 
   void applyThrust(Offset joystickValue, double scroll) {
     Offset oldPos = position;
@@ -178,7 +178,7 @@ class Laser extends GameObject {
     addLaserSprites(this, level, r, f.sheet);
   }
 
-  Offset _offset;
+  late Offset _offset;
 
   void move() {
     position += _offset;
@@ -189,7 +189,7 @@ class Laser extends GameObject {
   }
 }
 
-Color colorForDamage(double damage, double maxDamage, [Color toColor]) {
+Color colorForDamage(double damage, double maxDamage, [Color? toColor]) {
   int r, g, b;
   if (toColor == null) {
     r = 255;
@@ -222,7 +222,7 @@ abstract class Obstacle extends GameObject {
 abstract class Asteroid extends Obstacle {
   Asteroid(GameObjectFactory f) : super(f);
 
-  Sprite _sprite;
+  late Sprite _sprite;
 
   void setupActions() {
     // Rotate obstacle
@@ -246,7 +246,7 @@ abstract class Asteroid extends Obstacle {
 
 class AsteroidBig extends Asteroid {
   AsteroidBig(GameObjectFactory f) : super(f) {
-    _sprite = new Sprite(f.sheet["asteroid_big_${randomInt(3)}.png"]);
+    _sprite = new Sprite(f.sheet["asteroid_big_${randomInt(3)}.png"]!);
     _sprite.scale = 0.3;
     radius = 25.0;
     maxDamage = 5.0;
@@ -256,7 +256,7 @@ class AsteroidBig extends Asteroid {
 
 class AsteroidSmall extends Asteroid {
   AsteroidSmall(GameObjectFactory f) : super(f) {
-    _sprite = new Sprite(f.sheet["asteroid_small_${randomInt(3)}.png"]);
+    _sprite = new Sprite(f.sheet["asteroid_small_${randomInt(3)}.png"]!);
     _sprite.scale = 0.3;
     radius = 12.0;
     maxDamage = 3.0;
@@ -265,22 +265,22 @@ class AsteroidSmall extends Asteroid {
 }
 
 class AsteroidPowerUp extends AsteroidBig {
-  PowerUpType _powerUpType;
+  late PowerUpType _powerUpType;
 
   AsteroidPowerUp(GameObjectFactory f) : super(f) {
     _powerUpType = nextPowerUpType();
 
     removeAllChildren();
 
-    Sprite powerUpBg = new Sprite(f.sheet["powerup.png"]);
+    Sprite powerUpBg = new Sprite(f.sheet["powerup.png"]!);
     powerUpBg.scale = 0.3;
     addChild(powerUpBg);
 
-    Sprite powerUpIcon = new Sprite(f.sheet["powerup_${_powerUpType.index}.png"]);
+    Sprite powerUpIcon = new Sprite(f.sheet["powerup_${_powerUpType.index}.png"]!);
     powerUpIcon.scale = 0.3;
     addChild(powerUpIcon);
 
-    _sprite = new Sprite(f.sheet["crystal_${randomInt(2)}.png"]);
+    _sprite = new Sprite(f.sheet["crystal_${randomInt(2)}.png"]!);
     _sprite.scale = 0.3;
     addChild(_sprite);
   }
@@ -300,7 +300,7 @@ class AsteroidPowerUp extends AsteroidBig {
 
 class EnemyScout extends Obstacle {
   EnemyScout(GameObjectFactory f, int level) : super(f) {
-    _sprite = new Sprite(f.sheet["enemy_scout_$level.png"]);
+    _sprite = new Sprite(f.sheet["enemy_scout_$level.png"]!);
     _sprite.scale = 0.32;
 
     radius = 12.0 + level * 2.0;
@@ -365,12 +365,12 @@ class EnemyScout extends Obstacle {
     _sprite.colorOverlay = colorForDamage(d, maxDamage);
   }
 
-  Sprite _sprite;
+  late Sprite _sprite;
 }
 
 class EnemyDestroyer extends Obstacle {
   EnemyDestroyer(GameObjectFactory f, int level) : super(f) {
-    _sprite = new Sprite(f.sheet["enemy_destroyer_$level.png"]);
+    _sprite = new Sprite(f.sheet["enemy_destroyer_$level.png"]!);
     _sprite.scale = 0.32;
 
     radius = 24.0 + level * 2;
@@ -419,12 +419,12 @@ class EnemyDestroyer extends Obstacle {
     _sprite.colorOverlay = colorForDamage(d, maxDamage);
   }
 
-  Sprite _sprite;
+  late Sprite _sprite;
 }
 
 class EnemyLaser extends Obstacle {
   EnemyLaser(GameObjectFactory f, double rotation, double speed, Color color) : super(f) {
-    _sprite = new Sprite(f.sheet["explosion_particle.png"]);
+    _sprite = new Sprite(f.sheet["explosion_particle.png"]!);
     _sprite.scale = 0.5;
     _sprite.rotation = rotation + 90;
     _sprite.colorOverlay = color;
@@ -437,8 +437,8 @@ class EnemyLaser extends Obstacle {
     _movement = new Offset(math.cos(rad) * speed, math.sin(rad) * speed);
   }
 
-  Sprite _sprite;
-  Offset _movement;
+  late Sprite _sprite;
+  late Offset _movement;
 
   void move() {
     position += _movement;
@@ -448,7 +448,7 @@ class EnemyLaser extends Obstacle {
 class EnemyBoss extends Obstacle {
   EnemyBoss(GameObjectFactory f, int level) : super(f) {
     radius = 48.0;
-    _sprite = new Sprite(f.sheet["enemy_boss_${level % 3}.png"]);
+    _sprite = new Sprite(f.sheet["enemy_boss_${level % 3}.png"]!);
     _sprite.scale = 0.32;
     addChild(_sprite);
     maxDamage = 40.0 + 20.0 * level;
@@ -465,8 +465,8 @@ class EnemyBoss extends Obstacle {
     )];
   }
 
-  Sprite _sprite;
-  PowerBar _powerBar;
+  late Sprite _sprite;
+  late PowerBar _powerBar;
 
   int _countDown = randomInt(120) + 240;
 
@@ -505,7 +505,7 @@ class EnemyBoss extends Obstacle {
     if (_powerBar.parent != null) _powerBar.removeFromParent();
 
     // Flash the screen
-    NodeWithSize screen = f.playerState.parent;
+    NodeWithSize screen = f.playerState.parent as NodeWithSize;
     screen.addChild(new Flash(screen.size, 1.0));
     super.destroy();
 
@@ -552,7 +552,7 @@ class Collectable extends GameObject {
 
 class Coin extends Collectable {
   Coin(GameObjectFactory f) : super(f) {
-    _sprite = new Sprite(f.sheet["coin.png"]);
+    _sprite = new Sprite(f.sheet["coin.png"]!);
     _sprite.scale = 0.7;
     addChild(_sprite);
 
@@ -569,7 +569,7 @@ class Coin extends Collectable {
     motions.run(fadeIn);
   }
 
-  Sprite _sprite;
+  late Sprite _sprite;
 
   void collect() {
     f.sounds.play("pickup_0");
@@ -602,18 +602,18 @@ PowerUpType nextPowerUpType() {
 
 class PowerUp extends Collectable {
   PowerUp(GameObjectFactory f, this.type) : super(f) {
-    _sprite = new Sprite(f.sheet["powerup.png"]);
+    _sprite = new Sprite(f.sheet["powerup.png"]!);
     _sprite.scale = 0.3;
     addChild(_sprite);
 
-    Sprite powerUpIcon = new Sprite(f.sheet["powerup_${type.index}.png"]);
+    Sprite powerUpIcon = new Sprite(f.sheet["powerup_${type.index}.png"]!);
     powerUpIcon.scale = 0.3;
     addChild(powerUpIcon);
 
     radius = 10.0;
   }
 
-  Sprite _sprite;
+  late Sprite _sprite;
   PowerUpType type;
 
   void setupActions() {

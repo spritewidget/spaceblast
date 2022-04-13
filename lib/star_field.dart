@@ -1,15 +1,15 @@
 part of game;
 
 class StarField extends NodeWithSize {
-  ui.Image _image;
+  late ui.Image _image;
   SpriteSheet _spriteSheet;
   int _numStars;
   bool _autoScroll;
 
-  List<Offset> _starPositions;
-  List<double> _starScales;
-  List<Rect> _rects;
-  List<Color> _colors;
+  late List<Offset> _starPositions;
+  late List<double> _starScales;
+  late List<Rect> _rects;
+  List<Color>? _colors;
 
   final double _padding = 50.0;
   Size _paddedSize = Size.zero;
@@ -29,7 +29,7 @@ class StarField extends NodeWithSize {
     _colors = <Color>[];
     _rects = <Rect>[];
 
-    size = spriteBox.visibleArea.size;
+    size = spriteBox!.visibleArea!.size;
     _paddedSize = new Size(size.width + _padding * 2.0,
                            size.height + _padding * 2.0);
 
@@ -37,8 +37,8 @@ class StarField extends NodeWithSize {
       _starPositions.add(new Offset(randomDouble() * _paddedSize.width,
                                    randomDouble() * _paddedSize.height));
       _starScales.add(randomDouble() * 0.4);
-      _colors.add(new Color.fromARGB((255.0 * (randomDouble() * 0.5 + 0.5)).toInt(), 255, 255, 255));
-      _rects.add(_spriteSheet["star_${randomInt(2)}.png"].frame);
+      _colors!.add(new Color.fromARGB((255.0 * (randomDouble() * 0.5 + 0.5)).toInt(), 255, 255, 255));
+      _rects.add(_spriteSheet["star_${randomInt(2)}.png"]!.frame);
     }
   }
 

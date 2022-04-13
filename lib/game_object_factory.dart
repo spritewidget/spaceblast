@@ -31,7 +31,7 @@ class GameObjectFactory {
 
   void addEnemyScoutSwarm(int level, double yPos) {
     int numEnemies = (3 + level * 3).clamp(0, 12);
-    List<int> types;
+    late List<int> types;
     int swarmLevel = level % _maxLevel;
 
     if (swarmLevel == 0) types = [0, 0, 0];
@@ -54,7 +54,7 @@ class GameObjectFactory {
 
   void addEnemyDestroyerSwarm(int level, double yPos) {
     int numEnemies = (2 + level).clamp(2, 10);
-    List<int> types;
+    late List<int> types;
     int swarmLevel = level % _maxLevel;
 
     if (swarmLevel == 0) types = [0, 0, 0];
@@ -125,7 +125,7 @@ void addLaserSprites(Node node, int level, double r, SpriteSheet sheet) {
   // Add sprites
   List<Sprite> sprites = <Sprite>[];
   for (int i = 0; i < numLasers; i++) {
-    Sprite sprite = new Sprite(sheet["explosion_particle.png"]);
+    Sprite sprite = new Sprite(sheet["explosion_particle.png"]!);
     sprite.scale = 0.5;
     sprite.colorOverlay = laserColor;
     sprite.transferMode = ui.BlendMode.plus;
