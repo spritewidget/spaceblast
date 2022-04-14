@@ -103,14 +103,14 @@ class LevelLabel extends GameObject {
 class Ship extends GameObject {
   Ship(GameObjectFactory f) : super(f) {
     // Add main ship sprite
-    _sprite = Sprite(f.sheet["ship.png"]!);
+    _sprite = Sprite(texture: f.sheet["ship.png"]!);
     _sprite.scale = 0.3;
     _sprite.rotation = -90.0;
     addChild(_sprite);
 
-    _spriteShield = Sprite(f.sheet["shield.png"]!);
+    _spriteShield = Sprite(texture: f.sheet["shield.png"]!);
     _spriteShield.scale = 0.35;
-    _spriteShield.transferMode = ui.BlendMode.plus;
+    _spriteShield.blendMode = ui.BlendMode.plus;
     addChild(_spriteShield);
 
     radius = 20.0;
@@ -257,7 +257,7 @@ abstract class Asteroid extends Obstacle {
 
 class AsteroidBig extends Asteroid {
   AsteroidBig(GameObjectFactory f) : super(f) {
-    _sprite = Sprite(f.sheet["asteroid_big_${randomInt(3)}.png"]!);
+    _sprite = Sprite(texture: f.sheet["asteroid_big_${randomInt(3)}.png"]!);
     _sprite.scale = 0.3;
     radius = 25.0;
     maxDamage = 5.0;
@@ -267,7 +267,7 @@ class AsteroidBig extends Asteroid {
 
 class AsteroidSmall extends Asteroid {
   AsteroidSmall(GameObjectFactory f) : super(f) {
-    _sprite = Sprite(f.sheet["asteroid_small_${randomInt(3)}.png"]!);
+    _sprite = Sprite(texture: f.sheet["asteroid_small_${randomInt(3)}.png"]!);
     _sprite.scale = 0.3;
     radius = 12.0;
     maxDamage = 3.0;
@@ -283,15 +283,21 @@ class AsteroidPowerUp extends AsteroidBig {
 
     removeAllChildren();
 
-    Sprite powerUpBg = Sprite(f.sheet["powerup.png"]!);
+    Sprite powerUpBg = Sprite(
+      texture: f.sheet["powerup.png"]!,
+    );
     powerUpBg.scale = 0.3;
     addChild(powerUpBg);
 
-    Sprite powerUpIcon = Sprite(f.sheet["powerup_${_powerUpType.index}.png"]!);
+    Sprite powerUpIcon = Sprite(
+      texture: f.sheet["powerup_${_powerUpType.index}.png"]!,
+    );
     powerUpIcon.scale = 0.3;
     addChild(powerUpIcon);
 
-    _sprite = Sprite(f.sheet["crystal_${randomInt(2)}.png"]!);
+    _sprite = Sprite(
+      texture: f.sheet["crystal_${randomInt(2)}.png"]!,
+    );
     _sprite.scale = 0.3;
     addChild(_sprite);
   }
@@ -314,7 +320,7 @@ class AsteroidPowerUp extends AsteroidBig {
 
 class EnemyScout extends Obstacle {
   EnemyScout(GameObjectFactory f, int level) : super(f) {
-    _sprite = Sprite(f.sheet["enemy_scout_$level.png"]!);
+    _sprite = Sprite(texture: f.sheet["enemy_scout_$level.png"]!);
     _sprite.scale = 0.32;
 
     radius = 12.0 + level * 2.0;
@@ -369,7 +375,11 @@ class EnemyScout extends Obstacle {
       points.add(position + offset);
     }
 
-    MotionSpline spline = MotionSpline((Offset a) => position = a, points, 6.0);
+    MotionSpline spline = MotionSpline(
+      setter: (Offset a) => position = a,
+      points: points,
+      duration: 6.0,
+    );
     spline.tension = 0.7;
     motions.run(MotionRepeatForever(motion: spline));
   }
@@ -390,7 +400,7 @@ class EnemyScout extends Obstacle {
 
 class EnemyDestroyer extends Obstacle {
   EnemyDestroyer(GameObjectFactory f, int level) : super(f) {
-    _sprite = Sprite(f.sheet["enemy_destroyer_$level.png"]!);
+    _sprite = Sprite(texture: f.sheet["enemy_destroyer_$level.png"]!);
     _sprite.scale = 0.32;
 
     radius = 24.0 + level * 2;
@@ -452,7 +462,7 @@ class EnemyDestroyer extends Obstacle {
 class EnemyLaser extends Obstacle {
   EnemyLaser(GameObjectFactory f, double rotation, double speed, Color color)
       : super(f) {
-    _sprite = Sprite(f.sheet["explosion_particle.png"]!);
+    _sprite = Sprite(texture: f.sheet["explosion_particle.png"]!);
     _sprite.scale = 0.5;
     _sprite.rotation = rotation + 90;
     _sprite.colorOverlay = color;
@@ -477,7 +487,7 @@ class EnemyLaser extends Obstacle {
 class EnemyBoss extends Obstacle {
   EnemyBoss(GameObjectFactory f, int level) : super(f) {
     radius = 48.0;
-    _sprite = Sprite(f.sheet["enemy_boss_${level % 3}.png"]!);
+    _sprite = Sprite(texture: f.sheet["enemy_boss_${level % 3}.png"]!);
     _sprite.scale = 0.32;
     addChild(_sprite);
     maxDamage = 40.0 + 20.0 * level;
@@ -593,7 +603,7 @@ class Collectable extends GameObject {
 
 class Coin extends Collectable {
   Coin(GameObjectFactory f) : super(f) {
-    _sprite = Sprite(f.sheet["coin.png"]!);
+    _sprite = Sprite(texture: f.sheet["coin.png"]!);
     _sprite.scale = 0.7;
     addChild(_sprite);
 
@@ -655,11 +665,11 @@ PowerUpType nextPowerUpType() {
 
 class PowerUp extends Collectable {
   PowerUp(GameObjectFactory f, this.type) : super(f) {
-    _sprite = Sprite(f.sheet["powerup.png"]!);
+    _sprite = Sprite(texture: f.sheet["powerup.png"]!);
     _sprite.scale = 0.3;
     addChild(_sprite);
 
-    Sprite powerUpIcon = Sprite(f.sheet["powerup_${type.index}.png"]!);
+    Sprite powerUpIcon = Sprite(texture: f.sheet["powerup_${type.index}.png"]!);
     powerUpIcon.scale = 0.3;
     addChild(powerUpIcon);
 

@@ -70,10 +70,16 @@ main() async {
 
   // Load sprite sheets
   String json = await rootBundle.loadString('assets/sprites.json');
-  _spriteSheet = SpriteSheet(_imageMap['assets/sprites.png']!, json);
+  _spriteSheet = SpriteSheet(
+    image: _imageMap['assets/sprites.png']!,
+    jsonDefinition: json,
+  );
 
   json = await rootBundle.loadString('assets/game_ui.json');
-  _spriteSheetUI = SpriteSheet(_imageMap['assets/game_ui.png']!, json);
+  _spriteSheetUI = SpriteSheet(
+    image: _imageMap['assets/game_ui.png']!,
+    jsonDefinition: json,
+  );
 
   // All game assets are loaded - we are good to go!
   runApp(const GameDemo());

@@ -14,8 +14,8 @@ class RepeatedImage extends Node {
     _sprite1.position = const Offset(0.0, -1024.0);
 
     if (mode != null) {
-      _sprite0.transferMode = mode;
-      _sprite1.transferMode = mode;
+      _sprite0.blendMode = mode;
+      _sprite1.blendMode = mode;
     }
 
     addChild(_sprite0);

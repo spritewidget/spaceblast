@@ -156,10 +156,10 @@ void addLaserSprites(Node node, int level, double r, SpriteSheet sheet) {
   // Add sprites
   List<Sprite> sprites = <Sprite>[];
   for (int i = 0; i < numLasers; i++) {
-    Sprite sprite = Sprite(sheet["explosion_particle.png"]!);
+    Sprite sprite = Sprite(texture: sheet["explosion_particle.png"]!);
     sprite.scale = 0.5;
     sprite.colorOverlay = laserColor;
-    sprite.transferMode = ui.BlendMode.plus;
+    sprite.blendMode = ui.BlendMode.plus;
     node.addChild(sprite);
     sprites.add(sprite);
   }

@@ -3,7 +3,7 @@ part of game;
 class PlayerState extends Node {
   PlayerState(this._sheetUI, this._sheetGame, this._gameState) {
     // Score display
-    _spriteBackgroundScore = Sprite(_sheetUI["scoreboard.png"]!);
+    _spriteBackgroundScore = Sprite(texture: _sheetUI["scoreboard.png"]!);
     _spriteBackgroundScore.pivot = const Offset(1.0, 0.0);
     _spriteBackgroundScore.scale = 0.35;
     _spriteBackgroundScore.position = const Offset(240.0, 10.0);
@@ -14,7 +14,7 @@ class PlayerState extends Node {
     _spriteBackgroundScore.addChild(_scoreDisplay);
 
     // Coin display
-    _spriteBackgroundCoins = Sprite(_sheetUI["coinboard.png"]!);
+    _spriteBackgroundCoins = Sprite(texture: _sheetUI["coinboard.png"]!);
     _spriteBackgroundCoins.pivot = const Offset(1.0, 0.0);
     _spriteBackgroundCoins.scale = 0.35;
     _spriteBackgroundCoins.position = const Offset(105.0, 10.0);
@@ -64,12 +64,14 @@ class PlayerState extends Node {
 
     List<Offset> path = <Offset>[startPos, middlePos, finalPos];
 
-    Sprite sprite = Sprite(_sheetGame["coin.png"]!);
+    Sprite sprite = Sprite(texture: _sheetGame["coin.png"]!);
     sprite.scale = 0.7;
 
-    MotionSpline spline = MotionSpline((Offset a) {
-      sprite.position = a;
-    }, path, 0.5);
+    MotionSpline spline = MotionSpline(
+      setter: (Offset a) => sprite.position = a,
+      points: path,
+      duration: 0.5,
+    );
     spline.tension = 0.25;
     MotionTween rotate = MotionTween<double>(
       setter: (a) => sprite.rotation = a,
@@ -201,7 +203,7 @@ class ScoreDisplay extends Node {
       double xPos = -37.0;
       for (int i = scoreStr.length - 1; i >= 0; i--) {
         String numStr = scoreStr.substring(i, i + 1);
-        Sprite numSprite = Sprite(_sheetUI["number_$numStr.png"]!);
+        Sprite numSprite = Sprite(texture: _sheetUI["number_$numStr.png"]!);
         numSprite.position = Offset(xPos, 0.0);
         addChild(numSprite);
         xPos -= 37.0;

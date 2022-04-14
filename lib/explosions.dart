@@ -10,7 +10,7 @@ class ExplosionBig extends Explosion {
   ExplosionBig(SpriteSheet sheet) {
     // Add particles
     ParticleSystem particlesDebris = ParticleSystem(
-      sheet["explosion_particle.png"]!,
+      texture: sheet["explosion_particle.png"]!,
       rotateToMovement: true,
       startRotation: 90.0,
       startRotationVar: 0.0,
@@ -30,7 +30,7 @@ class ExplosionBig extends Explosion {
     addChild(particlesDebris);
 
     ParticleSystem particlesFire = ParticleSystem(
-      sheet["fire_particle.png"]!,
+      texture: sheet["fire_particle.png"]!,
       colorSequence: ColorSequence(
         colors: [
           const Color(0xffffff33),
@@ -59,8 +59,8 @@ class ExplosionBig extends Explosion {
     addChild(particlesFire);
 
     // Add ring
-    Sprite spriteRing = Sprite(sheet["explosion_ring.png"]!);
-    spriteRing.transferMode = ui.BlendMode.plus;
+    Sprite spriteRing = Sprite(texture: sheet["explosion_ring.png"]!);
+    spriteRing.blendMode = ui.BlendMode.plus;
     addChild(spriteRing);
 
     Motion scale = MotionTween<double>(
@@ -83,10 +83,10 @@ class ExplosionBig extends Explosion {
 
     // Add streaks
     for (int i = 0; i < 5; i++) {
-      Sprite spriteFlare = Sprite(sheet["explosion_flare.png"]!);
+      Sprite spriteFlare = Sprite(texture: sheet["explosion_flare.png"]!);
       spriteFlare.pivot = const Offset(0.3, 1.0);
       spriteFlare.scaleX = 0.3;
-      spriteFlare.transferMode = ui.BlendMode.plus;
+      spriteFlare.blendMode = ui.BlendMode.plus;
       spriteFlare.rotation = randomDouble() * 360.0;
       addChild(spriteFlare);
 
@@ -126,10 +126,10 @@ class ExplosionBig extends Explosion {
 class ExplosionMini extends Explosion {
   ExplosionMini(SpriteSheet sheet) {
     for (int i = 0; i < 2; i++) {
-      Sprite star = Sprite(sheet["star_0.png"]!);
+      Sprite star = Sprite(texture: sheet["star_0.png"]!);
       star.scale = 0.5;
       star.colorOverlay = const Color(0xff95f4fb);
-      star.transferMode = ui.BlendMode.plus;
+      star.blendMode = ui.BlendMode.plus;
       addChild(star);
 
       double rotationStart = randomDouble() * 90.0;
