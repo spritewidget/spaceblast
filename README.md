@@ -1,9 +1,10 @@
-# spaceblast
+# SpaceBlast
 
-A demo game for SpriteWidget. Showcases most features of SpriteWidget. Tested with Flutter 1.0.
+A demo game for [SpriteWidget](https://spritewidget.com). Showcases most features of SpriteWidget.
 
 ## Getting Started
 
-To run this project, clone it, then cd into the project folder and do
+Try it out online [here](https://spritewidget.com/spaceblast) or clone it and run it like you run any Flutter app:
 
+    flutter create .
     flutter run
