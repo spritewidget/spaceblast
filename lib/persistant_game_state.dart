@@ -2,43 +2,42 @@ part of game;
 
 class PersistantGameState {
   Future load() async {
-    // String dataDir = (await getApplicationDocumentsDirectory()).path;
-    // File file = new File(dataDir + '/gamestate.json');
-    // if (file.existsSync()) {
-    //   String json = file.readAsStringSync();
-    //   JsonDecoder decoder = new JsonDecoder();
-    //   Map data = decoder.convert(json);
-    //
-    //   coins = data['coins'];
-    //   _powerupLevels = data['powerUpLevels'].cast<int>();
-    //   _currentStartingLevel = data['currentStartingLevel'];
-    //   maxStartingLevel = data['maxStartingLevel'];
-    //   laserLevel = data['laserLevel'];
-    //   _lastScore = data['lastScore'];
-    //   weeklyBestScore = data['bestScore'];
-    // }
+    final prefs = await SharedPreferences.getInstance();
+    final json = prefs.getString('game_prefs');
+    if (json == null) return;
+
+    JsonDecoder decoder = const JsonDecoder();
+    Map data = decoder.convert(json);
+
+    coins = data['coins'];
+    _powerupLevels = data['powerUpLevels'].cast<int>();
+    _currentStartingLevel = data['currentStartingLevel'];
+    maxStartingLevel = data['maxStartingLevel'];
+    laserLevel = data['laserLevel'];
+    _lastScore = data['lastScore'];
+    weeklyBestScore = data['bestScore'];
   }
 
   Future store() async {
-    // String dataDir = (await getApplicationDocumentsDirectory()).path;
-    // File file = new File(dataDir + '/gamestate.json');
-    // Map data = {
-    //   'coins': coins,
-    //   'powerUpLevels': _powerupLevels,
-    //   'currentStartingLevel': _currentStartingLevel,
-    //   'maxStartingLevel': maxStartingLevel,
-    //   'laserLevel': laserLevel,
-    //   'lastScore': _lastScore,
-    //   'bestScore': weeklyBestScore
-    // };
-    // JsonEncoder encoder = new JsonEncoder();
-    // String json = encoder.convert(data);
-    // file.writeAsStringSync(json);
+    final prefs = await SharedPreferences.getInstance();
+
+    Map data = {
+      'coins': coins,
+      'powerUpLevels': _powerupLevels,
+      'currentStartingLevel': _currentStartingLevel,
+      'maxStartingLevel': maxStartingLevel,
+      'laserLevel': laserLevel,
+      'lastScore': _lastScore,
+      'bestScore': weeklyBestScore
+    };
+    JsonEncoder encoder = const JsonEncoder();
+    String json = encoder.convert(data);
+    prefs.setString('game_prefs', json);
   }
 
   int coins = 0;
 
-  final List<int> _powerupLevels = <int>[0, 0, 0, 0];
+  List<int> _powerupLevels = <int>[0, 0, 0, 0];
 
   int powerupLevel(PowerUpType type) {
     return _powerupLevels[type.index];

@@ -11,8 +11,8 @@ dependencies:
     sdk: flutter
   spritewidget:
     path: ../spritewidget
-#  path_provider: ^2.0.9
   cupertino_icons: ^1.0.4
+  shared_preferences: ^2.0.13
 
 dev_dependencies:
   flutter_test:

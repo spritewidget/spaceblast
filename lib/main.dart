@@ -99,18 +99,22 @@ class GameDemoState extends State<GameDemo> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Title(
-          title: 'Space Blast',
-          color: const Color(0xFF9900FF),
+        title: 'Space Blast',
+        color: const Color(0xFF9900FF),
+        child: AppFrame(
           child: Navigator(
-              key: _navigatorKey,
-              onGenerateRoute: (RouteSettings settings) {
-                switch (settings.name) {
-                  case '/game':
-                    return _buildGameSceneRoute();
-                  default:
-                    return _buildMainSceneRoute();
-                }
-              })),
+            key: _navigatorKey,
+            onGenerateRoute: (RouteSettings settings) {
+              switch (settings.name) {
+                case '/game':
+                  return _buildGameSceneRoute();
+                default:
+                  return _buildMainSceneRoute();
+              }
+            },
+          ),
+        ),
+      ),
     );
   }
 
@@ -131,37 +135,38 @@ class GameDemoState extends State<GameDemo> {
   PageRoute _buildMainSceneRoute() {
     return MaterialPageRoute(builder: (BuildContext context) {
       return MainScene(
-          gameState: _gameState,
-          onUpgradePowerUp: (PowerUpType type) {
-            setState(() {
-              if (_gameState.upgradePowerUp(type)) {
-                _sounds.play('buy_upgrade');
-              } else {
-                _sounds.play('click');
-              }
-            });
-          },
-          onUpgradeLaser: () {
-            setState(() {
-              if (_gameState.upgradeLaser()) {
-                _sounds.play('buy_upgrade');
-              } else {
-                _sounds.play('click');
-              }
-            });
-          },
-          onStartLevelUp: () {
-            setState(() {
-              _gameState.currentStartingLevel++;
+        gameState: _gameState,
+        onUpgradePowerUp: (PowerUpType type) {
+          setState(() {
+            if (_gameState.upgradePowerUp(type)) {
+              _sounds.play('buy_upgrade');
+            } else {
               _sounds.play('click');
-            });
-          },
-          onStartLevelDown: () {
-            setState(() {
-              _gameState.currentStartingLevel--;
-              _sounds.play('click');
-            });
+            }
           });
+        },
+        onUpgradeLaser: () {
+          setState(() {
+            if (_gameState.upgradeLaser()) {
+              _sounds.play('buy_upgrade');
+            } else {
+              _sounds.play('click');
+            }
+          });
+        },
+        onStartLevelUp: () {
+          setState(() {
+            _gameState.currentStartingLevel++;
+            _sounds.play('click');
+          });
+        },
+        onStartLevelDown: () {
+          setState(() {
+            _gameState.currentStartingLevel--;
+            _sounds.play('click');
+          });
+        },
+      );
     });
   }
 }
@@ -245,7 +250,11 @@ class MainSceneState extends State<MainScene> {
           child: CoordinateSystem(
             systemSize: const Size(320.0, 320.0),
             child: DefaultTextStyle(
-              style: const TextStyle(fontFamily: "Orbitron", fontSize: 20.0),
+              style: const TextStyle(
+                fontFamily: "Orbitron",
+                fontSize: 20.0,
+                color: Color(0xffffffff),
+              ),
               child: Stack(
                 children: <Widget>[
                   const MainSceneBackground(),
@@ -337,7 +346,7 @@ class TopBar extends StatelessWidget {
         ),
         Positioned(
           left: 36.0,
-          top: 81.0,
+          top: 82.5,
           child: Text(
             "${gameState.coins}",
             style: const TextStyle(
@@ -403,7 +412,7 @@ class CenterArea extends StatelessWidget {
             width: 57.0,
             height: 57.0,
             label: "${gameState.powerUpUpgradePrice(type)}",
-            labelOffset: const Offset(3.0, 18.5),
+            labelOffset: const Offset(3.0, 20.5),
             textStyle: const TextStyle(
                 fontFamily: "Orbitron", fontSize: 11.0, color: _darkTextColor),
             textAlign: TextAlign.center,
@@ -428,7 +437,7 @@ class CenterArea extends StatelessWidget {
             width: 137.0,
             height: 63.0,
             label: "${gameState.laserUpgradePrice()}",
-            labelOffset: const Offset(2.0, 18.0),
+            labelOffset: const Offset(2.0, 20.0),
             textStyle: const TextStyle(
                 fontFamily: "Orbitron", fontSize: 12.0, color: _darkTextColor),
             textAlign: TextAlign.center,

@@ -1,17 +1,16 @@
 library game;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spritewidget/spritewidget.dart';
 import 'package:vector_math/vector_math_64.dart';
 
-// import 'package:path_provider/path_provider.dart';
-
-part 'components.dart';
 part 'coordinate_system.dart';
 part 'custom_actions.dart';
 part 'explosions.dart';
@@ -26,3 +25,4 @@ part 'render_coordinate_system.dart';
 part 'repeated_image.dart';
 part 'sound_assets.dart';
 part 'star_field.dart';
+part 'widgets.dart';

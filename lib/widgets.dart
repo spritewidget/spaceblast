@@ -182,3 +182,42 @@ class TextureButtonPainter extends CustomPainter {
         oldDelegate.config.height != config.height;
   }
 }
+
+class AppFrame extends StatelessWidget {
+  const AppFrame({Key? key, required this.child}) : super(key: key);
+
+  final Widget child;
+
+  static const _minRatio = 1.5;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      final ratio = constraints.maxHeight / constraints.maxWidth;
+
+      if (ratio > _minRatio) {
+        return child;
+      } else {
+        final width = constraints.maxHeight / _minRatio;
+        final horizontalInset = (constraints.maxWidth - width) / 2;
+
+        return Stack(
+          children: [
+            Container(
+              color: const Color(0xFF222244),
+            ),
+            Positioned(
+              child: ClipRect(
+                child: child,
+              ),
+              top: 0,
+              bottom: 0,
+              left: horizontalInset,
+              right: horizontalInset,
+            ),
+          ],
+        );
+      }
+    });
+  }
+}
