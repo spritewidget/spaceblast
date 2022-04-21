@@ -1,0 +1,4 @@
+#!/bin/sh
+
+flutter build web --web-renderer canvaskit --base-href "/spaceblast/"
+cp -r build/web/ ../spritewidget_web/docs/spaceblast/
