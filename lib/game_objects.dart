@@ -60,7 +60,7 @@ abstract class GameObject extends Node {
       destroy();
       f.playerState.score += (maxDamage * 10).ceil();
     } else {
-      f.sounds.play("hit");
+      f.sounds.playEffect("hit");
     }
   }
 
@@ -217,7 +217,7 @@ abstract class Obstacle extends GameObject {
 
   @override
   Explosion createExplosion() {
-    f.sounds.play("explosion_${randomInt(3)}");
+    f.sounds.playEffect("explosion_${randomInt(3)}");
     Explosion explo = ExplosionBig(f.sheet);
     explo.scale = explosionScale;
     return explo;
@@ -440,7 +440,7 @@ class EnemyDestroyer extends Obstacle {
     _countDown -= 1;
     if (_countDown <= 0) {
       // Shoot at player
-      f.sounds.play("laser");
+      f.sounds.playEffect("laser");
 
       EnemyLaser laser = EnemyLaser(f, rotation, 5.0, const Color(0xffffe38e));
       laser.position = position;
@@ -518,7 +518,7 @@ class EnemyBoss extends Obstacle {
     _countDown -= 1;
     if (_countDown <= 0) {
       // Shoot at player
-      f.sounds.play("laser");
+      f.sounds.playEffect("laser");
 
       fire(10.0);
       fire(0.0);
@@ -568,7 +568,7 @@ class EnemyBoss extends Obstacle {
 
   @override
   Explosion createExplosion() {
-    f.sounds.play("explosion_boss");
+    f.sounds.playEffect("explosion_boss");
     ExplosionBig explo = ExplosionBig(f.sheet);
     explo.scale = 1.5;
     return explo;
@@ -635,7 +635,7 @@ class Coin extends Collectable {
 
   @override
   void collect() {
-    f.sounds.play("pickup_0");
+    f.sounds.playEffect("pickup_0");
     f.playerState.addCoin(this);
     super.collect();
   }
@@ -701,7 +701,7 @@ class PowerUp extends Collectable {
 
   @override
   void collect() {
-    f.sounds.play("buy_upgrade");
+    f.sounds.playEffect("buy_upgrade");
     f.playerState.activatePowerUp(type);
     super.collect();
   }

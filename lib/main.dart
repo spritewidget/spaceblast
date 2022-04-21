@@ -47,26 +47,28 @@ main() async {
     'assets/ui_popup.png',
   ]);
 
-  // TODO: Fix sounds
   _sounds = SoundAssets(rootBundle);
-//  loads.addAll([
-//    _sounds.load('explosion_0'),
-//    _sounds.load('explosion_1'),
-//    _sounds.load('explosion_2'),
-//    _sounds.load('explosion_boss'),
-//    _sounds.load('explosion_player'),
-//    _sounds.load('laser'),
-//    _sounds.load('hit'),
-//    _sounds.load('levelup'),
-//    _sounds.load('pickup_0'),
-//    _sounds.load('pickup_1'),
-//    _sounds.load('pickup_2'),
-//    _sounds.load('pickup_powerup'),
-//    _sounds.load('click'),
-//    _sounds.load('buy_upgrade'),
-//  ]);
+  final loads = <Future>[];
+  loads.addAll([
+    _sounds.loadEffect('explosion_0'),
+    _sounds.loadEffect('explosion_1'),
+    _sounds.loadEffect('explosion_2'),
+    _sounds.loadEffect('explosion_boss'),
+    _sounds.loadEffect('explosion_player'),
+    _sounds.loadEffect('laser'),
+    _sounds.loadEffect('hit'),
+    _sounds.loadEffect('levelup'),
+    _sounds.loadEffect('pickup_0'),
+    _sounds.loadEffect('pickup_1'),
+    _sounds.loadEffect('pickup_2'),
+    _sounds.loadEffect('pickup_powerup'),
+    _sounds.loadEffect('click'),
+    _sounds.loadEffect('buy_upgrade'),
+    _sounds.loadMusic('music_intro'),
+    _sounds.loadMusic('music_game'),
+  ]);
 
-//  await Future.wait(loads);
+  await Future.wait(loads);
 
   // Load sprite sheets
   String json = await rootBundle.loadString('assets/sprites.json');
@@ -139,31 +141,31 @@ class GameDemoState extends State<GameDemo> {
         onUpgradePowerUp: (PowerUpType type) {
           setState(() {
             if (_gameState.upgradePowerUp(type)) {
-              _sounds.play('buy_upgrade');
+              _sounds.playEffect('buy_upgrade');
             } else {
-              _sounds.play('click');
+              _sounds.playEffect('click');
             }
           });
         },
         onUpgradeLaser: () {
           setState(() {
             if (_gameState.upgradeLaser()) {
-              _sounds.play('buy_upgrade');
+              _sounds.playEffect('buy_upgrade');
             } else {
-              _sounds.play('click');
+              _sounds.playEffect('click');
             }
           });
         },
         onStartLevelUp: () {
           setState(() {
             _gameState.currentStartingLevel++;
-            _sounds.play('click');
+            _sounds.playEffect('click');
           });
         },
         onStartLevelDown: () {
           setState(() {
             _gameState.currentStartingLevel--;
-            _sounds.play('click');
+            _sounds.playEffect('click');
           });
         },
       );
@@ -193,11 +195,21 @@ class GameSceneState extends State<GameScene> {
     super.initState();
 
     _game = GameDemoNode(
-        _imageMap, _spriteSheet, _spriteSheetUI, _sounds, widget.gameState!,
-        (int score, int coins, int levelReached) {
-      Navigator.pop(context);
-      widget.onGameOver!(score, coins, levelReached);
-    });
+      _imageMap,
+      _spriteSheet,
+      _spriteSheetUI,
+      _sounds,
+      widget.gameState!,
+      (
+        int score,
+        int coins,
+        int levelReached,
+      ) {
+        Navigator.pop(context);
+        widget.onGameOver!(score, coins, levelReached);
+        _sounds.playMusic('music_intro');
+      },
+    );
   }
 
   @override
@@ -280,6 +292,7 @@ class MainSceneState extends State<MainScene> {
                         child: BottomBar(
                           onPlay: () {
                             Navigator.pushNamed(context, '/game');
+                            _sounds.playMusic('music_game');
                           },
                           onStartLevelUp: widget.onStartLevelUp,
                           onStartLevelDown: widget.onStartLevelDown,
@@ -475,51 +488,67 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: <Widget>[
-      Positioned(
+    return Stack(
+      children: <Widget>[
+        Positioned(
           left: 18.0,
           top: 14.0,
           child: TextureImage(
-              texture: _spriteSheetUI['level_display.png']!,
-              width: 62.0,
-              height: 62.0)),
-      Positioned(
+            texture: _spriteSheetUI['level_display.png']!,
+            width: 62.0,
+            height: 62.0,
+          ),
+        ),
+        Positioned(
           left: 18.0,
           top: 14.0,
           child: TextureImage(
-              texture: _spriteSheetUI[
-                  'level_display_${gameState.currentStartingLevel + 1}.png']!,
-              width: 62.0,
-              height: 62.0)),
-      Positioned(
+            texture: _spriteSheetUI[
+                'level_display_${gameState.currentStartingLevel + 1}.png']!,
+            width: 62.0,
+            height: 62.0,
+          ),
+        ),
+        Positioned(
           left: 85.0,
           top: 14.0,
           child: TextureButton(
-              texture: _spriteSheetUI['btn_level_up.png']!,
-              width: 30.0,
-              height: 30.0,
-              onPressed: onStartLevelUp)),
-      Positioned(
+            texture: _spriteSheetUI['btn_level_up.png']!,
+            width: 30.0,
+            height: 30.0,
+            onPressed: onStartLevelUp,
+          ),
+        ),
+        Positioned(
           left: 85.0,
           top: 46.0,
           child: TextureButton(
-              texture: _spriteSheetUI['btn_level_down.png']!,
-              width: 30.0,
-              height: 30.0,
-              onPressed: onStartLevelDown)),
-      Positioned(
+            texture: _spriteSheetUI['btn_level_down.png']!,
+            width: 30.0,
+            height: 30.0,
+            onPressed: onStartLevelDown,
+          ),
+        ),
+        Positioned(
           left: 120.0,
           top: 14.0,
           child: TextureButton(
-              onPressed: onPlay,
-              texture: _spriteSheetUI['btn_play.png']!,
-              label: "PLAY",
-              textStyle: const TextStyle(
-                  fontFamily: "Orbitron", fontSize: 28.0, letterSpacing: 3.0),
-              textAlign: TextAlign.center,
-              width: 181.0,
-              height: 62.0))
-    ]);
+            onPressed: onPlay,
+            texture: _spriteSheetUI['btn_play.png']!,
+            label: "PLAY",
+            textStyle: const TextStyle(
+              fontFamily: "Orbitron",
+              fontSize: 28.0,
+              letterSpacing: 3.0,
+              color: Color(0xffffffff),
+            ),
+            textAlign: TextAlign.center,
+            width: 181.0,
+            height: 62.0,
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -607,10 +636,12 @@ class LaserDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
-        child: SizedBox(
-            child: SpriteWidget(LaserDisplayNode(level)),
-            width: 26.0,
-            height: 26.0));
+      child: SizedBox(
+        child: SpriteWidget(LaserDisplayNode(level)),
+        width: 26.0,
+        height: 26.0,
+      ),
+    );
   }
 }
 

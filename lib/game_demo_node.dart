@@ -243,7 +243,7 @@ class GameDemoNode extends NodeWithSize {
     // Hide ship
     _level.ship.visible = false;
 
-    _sounds.play("explosion_player");
+    _sounds.playEffect("explosion_player");
 
     // Add explosion
     ExplosionBig explo = ExplosionBig(_spritesGame);
