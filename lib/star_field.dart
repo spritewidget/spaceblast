@@ -6,9 +6,9 @@ class StarField extends NodeWithSize {
   final int _numStars;
   final bool _autoScroll;
 
-  late List<Offset> _starPositions;
-  late List<double> _starScales;
-  late List<Rect> _rects;
+  List<Offset> _starPositions = [];
+  List<double> _starScales = [];
+  List<Rect> _rects = [];
   List<Color>? _colors;
 
   final double _padding = 50.0;
@@ -25,10 +25,10 @@ class StarField extends NodeWithSize {
   }
 
   void addStars() {
-    _starPositions = <Offset>[];
-    _starScales = <double>[];
-    _colors = <Color>[];
-    _rects = <Rect>[];
+    _starPositions = [];
+    _starScales = [];
+    _colors = [];
+    _rects = [];
 
     size = spriteBox!.visibleArea!.size;
     _paddedSize =
