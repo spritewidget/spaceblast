@@ -22,6 +22,7 @@ class StarField extends NodeWithSize {
   StarField(this._spriteSheet, this._numStars, [this._autoScroll = false])
       : super(Size.zero) {
     _image = _spriteSheet.image;
+    addStars();
   }
 
   void addStars() {
@@ -30,7 +31,11 @@ class StarField extends NodeWithSize {
     _colors = [];
     _rects = [];
 
-    size = spriteBox!.visibleArea!.size;
+    if (spriteBox == null) {
+      size = const Size(2048, 2048);
+    } else {
+      size = spriteBox!.visibleArea!.size;
+    }
     _paddedSize =
         Size(size.width + _padding * 2.0, size.height + _padding * 2.0);
 
