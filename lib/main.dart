@@ -48,8 +48,7 @@ main() async {
   ]);
 
   _sounds = SoundAssets(rootBundle);
-  final loads = <Future>[];
-  loads.addAll([
+  final loads = <Future>[
     _sounds.loadEffect('explosion_0'),
     _sounds.loadEffect('explosion_1'),
     _sounds.loadEffect('explosion_2'),
@@ -66,7 +65,7 @@ main() async {
     _sounds.loadEffect('buy_upgrade'),
     _sounds.loadMusic('music_intro'),
     _sounds.loadMusic('music_game'),
-  ]);
+  ];
 
   await Future.wait(loads);
 
