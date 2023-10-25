@@ -1,4 +1,4 @@
-part of game;
+part of 'game_demo.dart';
 
 var _gameSizeHeight = 320.0;
 

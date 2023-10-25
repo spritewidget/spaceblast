@@ -1,12 +1,12 @@
-part of game;
+part of 'game_demo.dart';
 
 class CoordinateSystem extends SingleChildRenderObjectWidget {
   const CoordinateSystem({
-    Key? key,
+    super.key,
     required this.systemSize,
     this.systemType = CoordinateSystemType.fixedWidth,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required Widget super.child,
+  });
 
   final Size systemSize;
   final CoordinateSystemType systemType;

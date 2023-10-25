@@ -1,4 +1,4 @@
-part of game;
+part of 'game_demo.dart';
 
 class PlayerState extends Node {
   PlayerState(this._sheetUI, this._sheetGame, this._gameState) {

@@ -1,4 +1,6 @@
-part of game;
+// ignore_for_file: use_super_parameters
+
+part of 'game_demo.dart';
 
 class TextureImage extends StatelessWidget {
   const TextureImage({
@@ -207,13 +209,13 @@ class AppFrame extends StatelessWidget {
               color: const Color(0xFF222244),
             ),
             Positioned(
-              child: ClipRect(
-                child: child,
-              ),
               top: 0,
               bottom: 0,
               left: horizontalInset,
               right: horizontalInset,
+              child: ClipRect(
+                child: child,
+              ),
             ),
           ],
         );

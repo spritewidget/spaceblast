@@ -1,4 +1,6 @@
-part of game;
+// ignore_for_file: use_super_parameters
+
+part of 'game_demo.dart';
 
 class PowerBar extends NodeWithSize {
   PowerBar(Size size, [this.power = 1.0]) : super(size);

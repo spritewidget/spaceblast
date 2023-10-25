@@ -1,4 +1,4 @@
-part of game;
+part of 'game_demo.dart';
 
 class SoundAssets {
   final AudioPlayer _musicPlayer = AudioPlayer();

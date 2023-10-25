@@ -1,7 +1,7 @@
-part of game;
+part of 'game_demo.dart';
 
 class Flash extends NodeWithSize {
-  Flash(Size size, this.duration) : super(size) {
+  Flash(super.size, this.duration) {
     MotionTween fade = MotionTween<double>(
       setter: (a) => _opacity = a,
       start: 1.0,

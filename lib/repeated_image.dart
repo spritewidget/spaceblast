@@ -1,4 +1,4 @@
-part of game;
+part of 'game_demo.dart';
 
 class RepeatedImage extends Node {
   late Sprite _sprite0;

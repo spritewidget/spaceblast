@@ -1,4 +1,4 @@
-part of game;
+part of 'game_demo.dart';
 
 abstract class GameObject extends Node {
   GameObject(this.f);
@@ -84,7 +84,7 @@ abstract class GameObject extends Node {
 }
 
 class LevelLabel extends GameObject {
-  LevelLabel(GameObjectFactory f, int level) : super(f) {
+  LevelLabel(super.f, int level) {
     canDamageShip = false;
     canBeDamaged = false;
 
@@ -211,7 +211,7 @@ Color colorForDamage(double damage, double maxDamage, [Color? toColor]) {
 }
 
 abstract class Obstacle extends GameObject {
-  Obstacle(GameObjectFactory f) : super(f);
+  Obstacle(super.f);
 
   double explosionScale = 1.0;
 
@@ -225,7 +225,7 @@ abstract class Obstacle extends GameObject {
 }
 
 abstract class Asteroid extends Obstacle {
-  Asteroid(GameObjectFactory f) : super(f);
+  Asteroid(super.f);
 
   late Sprite _sprite;
 
@@ -592,7 +592,7 @@ class EnemyBoss extends Obstacle {
 }
 
 class Collectable extends GameObject {
-  Collectable(GameObjectFactory f) : super(f) {
+  Collectable(super.f) {
     canDamageShip = false;
     canBeDamaged = false;
     canBeCollected = true;

@@ -88,7 +88,7 @@ main() async {
 }
 
 class GameDemo extends StatefulWidget {
-  const GameDemo({Key? key}) : super(key: key);
+  const GameDemo({super.key});
 
   @override
   GameDemoState createState() => GameDemoState();
@@ -177,8 +177,8 @@ class GameScene extends StatefulWidget {
   const GameScene({
     this.onGameOver,
     this.gameState,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final GameOverCallback? onGameOver;
   final PersistantGameState? gameState;
@@ -223,13 +223,13 @@ class GameSceneState extends State<GameScene> {
 
 class MainScene extends StatefulWidget {
   const MainScene({
-    Key? key,
+    super.key,
     required this.gameState,
     required this.onUpgradePowerUp,
     required this.onUpgradeLaser,
     required this.onStartLevelUp,
     required this.onStartLevelDown,
-  }) : super(key: key);
+  });
 
   final PersistantGameState gameState;
   final UpgradePowerUpCallback onUpgradePowerUp;
@@ -314,8 +314,8 @@ class MainSceneState extends State<MainScene> {
 class TopBar extends StatelessWidget {
   const TopBar({
     required this.gameState,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final PersistantGameState gameState;
 
@@ -380,8 +380,8 @@ class CenterArea extends StatelessWidget {
     required this.onUpgradeLaser,
     required this.gameState,
     required this.onUpgradePowerUp,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   // final int selection;
   final VoidCallback onUpgradeLaser;
@@ -399,19 +399,19 @@ class CenterArea extends StatelessWidget {
 
   Widget _buildUpgradePanel() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      key: const Key("upgradePanel"),
       children: <Widget>[
         const Text("Upgrade Laser"),
         _buildLaserUpgradeButton(),
         const Text("Upgrade Power-Ups"),
-        Row(children: <Widget>[
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           _buildPowerUpButton(PowerUpType.shield),
           _buildPowerUpButton(PowerUpType.sideLaser),
           _buildPowerUpButton(PowerUpType.speedBoost),
           _buildPowerUpButton(PowerUpType.speedLaser),
-        ], mainAxisAlignment: MainAxisAlignment.center)
+        ])
       ],
-      mainAxisAlignment: MainAxisAlignment.center,
-      key: const Key("upgradePanel"),
     );
   }
 
@@ -457,14 +457,14 @@ class CenterArea extends StatelessWidget {
             onPressed: onUpgradeLaser,
           ),
           Positioned(
-            child: LaserDisplay(level: gameState.laserLevel),
             left: 19.5,
             top: 14.0,
+            child: LaserDisplay(level: gameState.laserLevel),
           ),
           Positioned(
-            child: LaserDisplay(level: gameState.laserLevel + 1),
             right: 19.5,
             top: 14.0,
+            child: LaserDisplay(level: gameState.laserLevel + 1),
           )
         ],
       ),
@@ -478,8 +478,8 @@ class BottomBar extends StatelessWidget {
     required this.gameState,
     required this.onStartLevelUp,
     required this.onStartLevelDown,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final VoidCallback onPlay;
   final VoidCallback onStartLevelUp;
@@ -553,7 +553,7 @@ class BottomBar extends StatelessWidget {
 }
 
 class MainSceneBackground extends StatefulWidget {
-  const MainSceneBackground({Key? key}) : super(key: key);
+  const MainSceneBackground({super.key});
 
   @override
   MainSceneBackgroundState createState() => MainSceneBackgroundState();
@@ -628,8 +628,8 @@ class MainSceneBackgroundNode extends NodeWithSize {
 class LaserDisplay extends StatelessWidget {
   const LaserDisplay({
     required this.level,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final int level;
 
@@ -637,9 +637,9 @@ class LaserDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return IgnorePointer(
       child: SizedBox(
-        child: SpriteWidget(LaserDisplayNode(level)),
         width: 26.0,
         height: 26.0,
+        child: SpriteWidget(LaserDisplayNode(level)),
       ),
     );
   }

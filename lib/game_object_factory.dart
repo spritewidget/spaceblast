@@ -1,4 +1,4 @@
-part of game;
+part of 'game_demo.dart';
 
 const int _maxLevel = 9;
 
