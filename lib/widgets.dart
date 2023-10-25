@@ -1,14 +1,12 @@
-// ignore_for_file: use_super_parameters
-
 part of 'game_demo.dart';
 
 class TextureImage extends StatelessWidget {
   const TextureImage({
-    Key? key,
+    super.key,
     required this.texture,
     this.width = 128.0,
     this.height = 128.0,
-  }) : super(key: key);
+  });
 
   final SpriteTexture texture;
   final double width;
@@ -54,7 +52,7 @@ class TextureImagePainter extends CustomPainter {
 
 class TextureButton extends StatefulWidget {
   const TextureButton(
-      {Key? key,
+      {super.key,
       required this.onPressed,
       required this.texture,
       this.textureDown,
@@ -63,8 +61,7 @@ class TextureButton extends StatefulWidget {
       this.label,
       this.textStyle,
       this.textAlign = TextAlign.center,
-      this.labelOffset = Offset.zero})
-      : super(key: key);
+      this.labelOffset = Offset.zero});
 
   final VoidCallback onPressed;
   final SpriteTexture texture;
@@ -186,7 +183,7 @@ class TextureButtonPainter extends CustomPainter {
 }
 
 class AppFrame extends StatelessWidget {
-  const AppFrame({Key? key, required this.child}) : super(key: key);
+  const AppFrame({super.key, required this.child});
 
   final Widget child;
 
